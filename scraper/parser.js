@@ -26,7 +26,6 @@ function extractPeaks(file) {
 	} else {
 		records = $('table.wikitable tr:not(:first-child)')
 	}
-	
 	records.each((i, el) => {
 		let mountain = {}
 		$(el).find('td').each((j, sel) => {
@@ -35,6 +34,11 @@ function extractPeaks(file) {
 		    case (0):
 	        mountain[field] = parseInt($(sel).text().slice(0, -1))
 	        break
+	      case (1):
+	        mountain[field] = $(sel).text().slice(0, -1)
+	        const link = $(sel).find('a').attr('href')
+	        mountain['MountainLink'] = link
+	        break
 	      case (2):
 	        mountain[field] = parseInt($(sel).text().slice(0, -1))
 	        break
@@ -42,10 +46,8 @@ function extractPeaks(file) {
 	        mountain[field] = parseInt($(sel).text().slice(0, -1))
 	        break
        	case (4):
-	        mountain[field] = {
-	        	lat: $(sel).find('.latitude').text(),
-	        	lon: $(sel).find('.longitude').text()
-	        }
+	        mountain['lat'] = $(sel).find('.latitude').text()
+	        mountain['lon'] = $(sel).find('.longitude').text()
         break
 		    default:
 	        mountain[field] = $(sel).text().slice(0, -1)
@@ -66,15 +68,17 @@ function init() {
 	files.map(extractPeaks)
 
 	const rankedMountains = mountains.filter((m) => {
-		return m.Rank !== 0
+		return Number.isInteger(m.Rank)
 	})
 
 	rankedMountains.sort((x, y) => {
-	   return d3.ascending(x.Rank, y.Rank);
+		return d3.ascending(x.Rank, y.Rank);
 	})
 
 	console.log(rankedMountains)
 
+	const output = d3.csvFormat(rankedMountains)
+	fs.writeFileSync('./output/mountains.csv', output)
 }
 
 init()
