@@ -1,13 +1,16 @@
+//1605 mountains, 54 without rank > 1551 ranked mountains
 const fs = require('fs')
 const cheerio = require('cheerio')
 const d3 = require('d3')
-const axios = require('axios')
+const request = require('request')
+var parseDMS = require('parse-dms')
 
 const inputDir = './output'
 const header = []
 let mountains = []
 let promises = []
 let errFlag = false
+let retry = []
 
 function createHeader(file) {
 	const html = fs.readFileSync(`${inputDir}/${file}`, 'utf-8')
@@ -17,6 +20,24 @@ function createHeader(file) {
 		// .slice(0, -1) removes the carriage return, .replace(/ *\[[^)]*\] */g, "") removes the content between [], .replace(/ *\([^)]*\) */g, "") removes the content between ()
 		header.push($(el).text().slice(0, -1).replace(/ *\[[^)]*\] */g, "").replace(/ *\([^)]*\) */g, ""))
 	})
+}
+
+function extractImg(resolve, mountain, link) {
+	const uri = 'https://en.wikipedia.org' + link
+  request(uri, { timeout: 15000 }, (err, response, body) => {
+  	if (err) {
+  		console.log('ERR', mountain['Rank'] + '/1551', mountain['Mountain'])
+  		mountain['MountainImgSrc'] = 'Error'
+  		retry.push(link)
+  	} else {
+  		console.log('OK', mountain['Rank'] + '/1551', mountain['Mountain'])
+  		const $ = cheerio.load(body)
+			const imgThumbSrc = 'https:' + $('table.infobox.vcard .image img').attr('src')
+  		//console.log(imgThumbSrc)
+  		mountain['MountainImgSrc'] = imgThumbSrc
+  	}
+  	resolve(mountain)
+  })
 }
 
 function extractPeaks(file) {
@@ -29,66 +50,66 @@ function extractPeaks(file) {
 	} else {
 		records = $('table.wikitable tr:not(:first-child)')
 	}
-	records.each((i, el) => {
-		let mountain = {}
-
-		let promise = new Promise((resolve, reject) => {
-			
-			$(el).find('td').each((j, sel) => {
-				const field = header[j]
-				switch(j) {
-			    case (0):
-		        mountain[field] = parseInt($(sel).text().slice(0, -1))
-		        break
-		      case (1):
-		        mountain[field] = $(sel).text().slice(0, -1)
-		        const link = $(sel).find('a').attr('href')
-		        
-
-		        const uri = 'https://en.wikipedia.org' + link
-			      const instance = axios.create({
-						  baseURL: uri,
-						  timeout: 5000
-						})
-		        instance.get(uri)
-						  .then(function (response) {
-						  	// const $ = cheerio.load(response.body)
-						  	console.log(mountain['Mountain'])
-								mountain['MountainLink'] = link
-						    mountain['MountainImgSrc'] = 'puppa'
-						  })
-						  .catch(function (err) {
-						  	if (!errFlag) {
-						    	// console.log("pheeeeeeega!", err, mountain)
-						  	}
-						  	errFlag = true
-						  	mountain['MountainLink'] = 'stocazzo'
-						  })
-		        break
-		      case (2):
-		        mountain[field] = parseInt($(sel).text().slice(0, -1))
-		        break
-		      case (3):
-		        mountain[field] = parseInt($(sel).text().slice(0, -1))
-		        break
-	       	case (4):
-		        mountain['lat'] = $(sel).find('.latitude').text()
-		        mountain['lon'] = $(sel).find('.longitude').text()
-	        break
-			    default:
-		        mountain[field] = $(sel).text().slice(0, -1)
-				}
-			})
-			resolve(mountain)
-		  
+	records
+		.filter((k, el) => { 
+			return $(el).find('td:first-child').text().slice(0, -1) !== '' //removes unranked peaks
 		})
-
-		mountains.push(promise)
-
-		//console.log(mountain)
-		//mountains.push(mountain)
-	})
-}
+		.each((i, el) => {
+			let mountain = {}
+			let promise = new Promise((resolve, reject) => {
+				$(el).find('td').each((j, sel) => {
+					const field = header[j]
+					switch(j) {
+				    case (0):
+			        mountain[field] = parseInt($(sel).text().slice(0, -1))
+			        break
+			      case (1):
+			        mountain[field] = $(sel).text().slice(0, -1).replace(/ *\[[^)]*\] */g, "")
+			        const link = $(sel).find('a').attr('href')
+			        if ( link.includes('&action=edit') ) {
+			        	mountain['MountainLink'] = 'noPage'
+			        	mountain['MountainImgSrc'] = 'noImg'
+			        	resolve(mountain)
+			        } else {
+				        mountain['MountainLink'] = link
+				        // const uri = 'https://en.wikipedia.org' + link
+				        // request(uri, { timeout: 15000 }, (err, response, body) => {
+				        // 	if (err) {
+				        // 		console.log('ERR', mountain['Rank'] + '/1551', mountain['Mountain'])
+				        // 		mountain['MountainImgSrc'] = 'Error'
+				        // 		retry.push(link)
+				        // 	} else {
+				        // 		console.log('OK', mountain['Rank'] + '/1551', mountain['Mountain'])
+				        // 		const $ = cheerio.load(body)
+			        	// 		const imgThumbSrc = 'https:' + $('table.infobox.vcard .image img').attr('src')
+				        // 		//console.log(imgThumbSrc)
+				        // 		mountain['MountainImgSrc'] = imgThumbSrc
+				        // 	}
+				        // 	resolve(mountain)
+				        // })
+				        extractImg(resolve, mountain, link)
+			        }
+			        break
+			      case (2):
+			        mountain[field] = parseInt($(sel).text().slice(0, -1))
+			        break
+			      case (3):
+			        mountain[field] = parseInt($(sel).text().slice(0, -1))
+			        break
+		       	case (4):
+		       	const DMScoord = [ $(sel).find('.latitude').text(), $(sel).find('.longitude').text() ]
+			        mountain['lat'] = parseDMS( DMScoord[0] ).lat
+			        mountain['lon'] = parseDMS( DMScoord[1] ).lon
+		        break
+				    default:
+			        mountain[field] = $(sel).text().slice(0, -1)
+					}
+				})		  
+			}) //with peak images
+			mountains.push(promise) //with peak images
+			// mountains.push(mountain) //without peak images
+		})
+	}
 
 function init() {
 	const files = fs
@@ -101,13 +122,14 @@ function init() {
 
 	Promise.all(mountains)
 		.then((mountains) => {
+			console.log(retry.length, retry)
 			const rankedMountains = mountains.filter((m) => {
 				return Number.isInteger(m.Rank)
 			})
 			rankedMountains.sort((x, y) => {
 				return d3.ascending(x.Rank, y.Rank);
 			})
-			console.log(rankedMountains)
+			//console.log(rankedMountains)
 			const output = d3.csvFormat(rankedMountains)
 			fs.writeFileSync('./output/mountains.csv', output)
 		})

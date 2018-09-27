@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Alps explorer</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+
+	<body>
+		<header></header>
+		<main id="main-container">
+			<div id="peaks-container">
+		    <svg id="peaks-chart"></svg>
+		  </div>
+		</main>
+		<footer>
+			<div id="control">
+			  <div class="slidecontainer">
+			    <input type="range" min="1" max="100" value="1" class="slider" id="myRange">
+			    <p>Value: <span id="demo"></span></p>
+			  </div>
+			</div>
+		</footer>
+		
+		<script src="node_modules/d3/dist/d3.min.js"></script>
+		<script src="node_modules/jquery/dist/jquery.js"></script>
+	  <!-- <script src="node_modules/lodash/lodash.js"></script>
+	  <script src="node_modules/stateman/stateman.js"></script>
+	  <script src="node_modules/gsap/src/minified/TweenMax.min.js"></script>
+	  <script src="node_modules/es6-promise/dist/es6-promise.js"></script>
+	  <script src="node_modules/es6-promise/dist/es6-promise.auto.js"></script>
+  	<script src="node_modules/firebase/firebase-database.js"></script> -->
+		<script type="text/javascript" src="js/app.js"></script>
+	</body>
+</html>
