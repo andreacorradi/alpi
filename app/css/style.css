@@ -14,7 +14,15 @@ html, body {
 
 header {
   width: 100%;
-  height: 10vh;
+  height: calc(10vh - 10px);
+}
+
+#main-wrapper {
+  width: 100%;
+  height: 80vh;
+  padding: 0 1rem;
+  background: lightgrey;
+  overflow-y: hidden;
 }
 
 main {
@@ -23,6 +31,7 @@ main {
   background: lightgrey;
   overflow-x: scroll;
   overflow-y: hidden;
+  transform: translateY(10px)
 }
 
 #peaks-container {
@@ -37,11 +46,15 @@ main #peaks-chart {
 
 footer {
   width: 100%;
-  height: 10vh;
+  height: calc(10vh + 10px);
+  padding: 0 1rem;
+  background: lightgrey;
+  position: absolute;
+  left: 0;
+  z-index: 9999;
 }
 
 #control {
-  background: lightgrey;
   width: 100%;
   height: 100%;
 }
@@ -51,10 +64,11 @@ footer {
 }
 /* The slider itself */
 .slider {
+  margin-top: 10px;
   -webkit-appearance: none;  /* Override default CSS styles */
   appearance: none;
   width: 100%; /* Full-width */
-  height: 24px; /* Specified height */
+  height: 2rem; /* Specified height */
   background: #AAA; /* Grey background */
   outline: none; /* Remove outline */
   opacity: 0.7;
@@ -70,9 +84,9 @@ footer {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
   background: #777;
   cursor: pointer;
 }

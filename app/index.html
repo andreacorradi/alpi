@@ -7,16 +7,20 @@
 	</head>
 
 	<body>
-		<header></header>
-		<main id="main-container">
-			<div id="peaks-container">
-		    <svg id="peaks-chart"></svg>
-		  </div>
-		</main>
+		<header>
+			<select name="country-sel" id="country-sel"></select>
+		</header>
+		<div id="main-wrapper">
+			<main id="main-container">
+				<div id="peaks-container">
+			    <svg id="peaks-chart"></svg>
+			  </div>
+			</main>
+		</div>
 		<footer>
 			<div id="control">
 			  <div class="slidecontainer">
-			    <input type="range" min="1" max="100" value="1" class="slider" id="myRange">
+			    <input type="range" min="1" max="900" value="1" class="slider" id="zoomslider">
 			    <p>Value: <span id="demo"></span></p>
 			  </div>
 			</div>
