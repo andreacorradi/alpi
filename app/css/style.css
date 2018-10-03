@@ -24,6 +24,9 @@ header {
   background: lightgrey;
   overflow-y: hidden;
 }
+#main-wrapper.main-mobile {
+  overflow: hidden;
+}
 
 main {
 	width: 100%;
