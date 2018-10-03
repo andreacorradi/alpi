@@ -3,6 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Alps explorer</title>
+		<link rel="stylesheet" type="text/css" href="components/peakchart/peakchart.css">
+		<link rel="stylesheet" type="text/css" href="components/ui/ui.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 
@@ -12,11 +14,7 @@
 			<select name="order-sel" id="order-sel"></select>
 		</header>
 		<div id="main-wrapper">
-			<main id="main-container">
-				<div id="peaks-container">
-			    <svg id="peaks-chart"></svg>
-			  </div>
-			</main>
+			<main id="main-container" process="components/peakchart/_peakchart.html" process-keep></main>
 		</div>
 		<footer>
 			<div id="control">
@@ -29,12 +27,20 @@
 		
 		<script src="node_modules/d3/dist/d3.min.js"></script>
 		<script src="node_modules/jquery/dist/jquery.js"></script>
-	  <!-- <script src="node_modules/lodash/lodash.js"></script>
-	  <script src="node_modules/stateman/stateman.js"></script>
+	  <script src="node_modules/lodash/lodash.js"></script>
+	  <!-- <script src="node_modules/stateman/stateman.js"></script>
 	  <script src="node_modules/gsap/src/minified/TweenMax.min.js"></script>
 	  <script src="node_modules/es6-promise/dist/es6-promise.js"></script>
-	  <script src="node_modules/es6-promise/dist/es6-promise.auto.js"></script>
-  	<script src="node_modules/firebase/firebase-database.js"></script> -->
+	  <script src="node_modules/es6-promise/dist/es6-promise.auto.js"></script> -->
+
+	  <script type="text/javascript" src="components/peakchart/peakchart.js"></script>
+	  <script type="text/javascript" src="components/ui/ui.js"></script>
 		<script type="text/javascript" src="js/app.js"></script>
+
+		<script src="node_modules/static-player/static-player.js"></script>
+	  <script type="text/javascript">
+	  window.StaticPlayer.getInstance().begin()
+	  </script>
+
 	</body>
 </html>

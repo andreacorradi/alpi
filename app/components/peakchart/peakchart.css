@@ -1,0 +1,21 @@
+#peaks-container {
+  height: 100%;
+  display: flex;
+}
+
+main #peaks-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.triangle {
+	fill: blue;
+	fill-opacity: 0.1;
+	stroke: none;
+}
+.triangle.orange {
+	fill: orange;
+}
+.triangle.green {
+	fill: green;
+}

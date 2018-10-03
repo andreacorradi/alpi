@@ -1,0 +1,28 @@
+{
+  "name": "static-player",
+  "authors": [
+    "abusedmedia <ff@todo.to.it>"
+  ],
+  "description": "Simple static site generator that run in browser first then can bake files for server",
+  "main": "static-player.js",
+  "moduleType": [],
+  "keywords": [
+    "static",
+    "site",
+    "generator"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.4",
+    "lodash": "^4.13.1"
+  }
+}
