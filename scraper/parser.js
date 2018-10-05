@@ -72,21 +72,6 @@ function extractPeaks(file) {
 			        	resolve(mountain)
 			        } else {
 				        mountain['MountainLink'] = link
-				        // const uri = 'https://en.wikipedia.org' + link
-				        // request(uri, { timeout: 15000 }, (err, response, body) => {
-				        // 	if (err) {
-				        // 		console.log('ERR', mountain['Rank'] + '/1551', mountain['Mountain'])
-				        // 		mountain['MountainImgSrc'] = 'Error'
-				        // 		retry.push(link)
-				        // 	} else {
-				        // 		console.log('OK', mountain['Rank'] + '/1551', mountain['Mountain'])
-				        // 		const $ = cheerio.load(body)
-			        	// 		const imgThumbSrc = 'https:' + $('table.infobox.vcard .image img').attr('src')
-				        // 		//console.log(imgThumbSrc)
-				        // 		mountain['MountainImgSrc'] = imgThumbSrc
-				        // 	}
-				        // 	resolve(mountain)
-				        // })
 				        extractImg(resolve, mountain, link)
 			        }
 			        break

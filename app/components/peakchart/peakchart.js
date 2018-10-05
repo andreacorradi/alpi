@@ -10,12 +10,25 @@ function Peakchart() {
 	const angleThreshold = 100 //to avoid flat connections between mountains
 	const transDuration = 1000
 
+	const countryColors = { 
+		IT: 'purple',
+		CH: 'green',
+		FR: 'red',
+		DE: 'blue',
+		AT: 'orange',
+		LI: 'cyan',
+		SI: 'pink'
+	}
+
+	const countryCouples = ["FR/IT", "CH/IT",	"CH/FR", "AT/IT",	"AT/CH", "AT/DE",	"IT/SI", "CH/LI",	"AT/LI", "AT/SI"]
+
 	let svgW = svg.clientWidth
 	let containerH = container.clientHeight
 
 	let mountains = null
 	let dataLength = 0
 
+	let countries = []
 	let filterValue = 'All'
 	let orderValue = 'height'
 	let filterField = 'country'
@@ -24,6 +37,23 @@ function Peakchart() {
 		.domain([0, 4808])
 		.range([10, containerH - 10])
 
+  function generateGradients() {
+  	countryCouples.forEach((c) => {
+  		const identifier = c.split('/')[0].toLowerCase() + '-' + c.split('/')[1].toLowerCase()
+  		d3.select('svg defs').append('linearGradient')
+	      .attr("id", identifier + "-gradient")
+	      .attr("x1", "0%").attr("y1", "0%")
+      	.attr("x2", "100%").attr("y2", "0%")
+	    .selectAll("stop")
+	      .data([
+	        {offset: "0%", color: countryColors[c.split('/')[0]]},
+	        {offset: "100%", color: countryColors[c.split('/')[1]]}
+	      ])
+	    .enter().append("stop")
+	      .attr("offset", function(d) { return d.offset })
+	      .attr("stop-color", function(d) { return d.color })
+  	})
+  }
 
 	self.init = function() {
 		d3.csv("./../scraper/output/mountains.csv", (m) => {
@@ -38,15 +68,16 @@ function Peakchart() {
 				lon: +m.lon,
 				range: m.Range,
 				region: m.Region,
-				country: m.Country,
+				country: generateCountryField(m.Country),
 				firstascent: +m.Firstascent
 			}
 		})
 		.then(function(_mountains) {
 			//if (error) throw error
 			mountains = _mountains
+			generateGradients()
 			//drop-downs population
-			const countries = getUniqueValuesOfKey(mountains, 'country')
+			countries = getUniqueValuesOfKey(mountains, 'country')
 			countries.unshift("All")
 			APP.ui.populateSel(countrySel, countries)
 			const orderPars = ['height', 'lat', 'drop']
@@ -71,6 +102,7 @@ function Peakchart() {
 	    .data(data)
 	  triangles
 	  	.attr('class', (d) => assignColorClass(d))
+	  	// .style('fill', (d) => assignColor(d))
     	.attr('points', (d, i) => calcPoints(d, i, 0, span))
 	  	.transition()
 	  	.duration(transDuration)
@@ -78,6 +110,7 @@ function Peakchart() {
 	  let newTriangles = triangles
 		  .enter().append('polygon')
 		  	.attr('class', (d) => assignColorClass(d))
+		  	// .style('fill', (d) => assignColor(d))
 		  	.attr('points', (d, i) => calcPoints(d, i, 0, span))
 		  	.transition()
 	  		.duration(transDuration)
@@ -98,16 +131,24 @@ function Peakchart() {
 		return _data
 			.filter((d) => {
 				if (filterValue === 'All') return d
-				else return d[filterField] === filterValue
+				else return d[filterField].includes(filterValue)
 			})
-			.sort((a,b) => b[sortField] - a[sortField])
+			.sort((a,b) => {
+				if (sortField === 'lat') return a[sortField] - b[sortField]
+				else return b[sortField] - a[sortField]
+			})
 	}
 
 	function getUniqueValuesOfKey(array, key){ 
-	  return array.reduce(function(carry, item){
-	    if(item[key] && !~carry.indexOf(item[key])) carry.push(item[key])
-	    return carry
-	  }, [])
+		let countries = []
+	  array.forEach((el, i) => {
+	  	el[key].forEach((c) => {
+	  		if (!countries.includes(c)) {
+	  			countries.push(c)
+	  		}
+	  	})
+	  })
+	  return countries
 	}
 
 	function addPrevPointData(_data) { //takes a dataset and adds to each record some height and drop info of the previous record
@@ -143,17 +184,27 @@ function Peakchart() {
 	}
 
 	function assignColorClass(el) {
-		switch (el.country) {
-			case 'IT':
-				return 'triangle orange'
-				break
-			case 'CH':
-				return 'triangle green'
-				break
-			default:
-				return 'triangle'
-				break
+		if (el.country.length === 1) {
+			return 'triangle ' + countryColors[el.country]
+		}	else {
+			const code = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
+			console.log(code)
+			return 'triangle ' + code
 		}
+	}
+
+	function assignColor(el) {
+		if (el.country.length === 1) {
+			return countryColors[el.country]
+		}	else {
+			const code = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
+			return 'url(#' + code + 'gradient)'
+		}
+	}
+
+	function generateCountryField(str) {
+		const arr = str.split('/')
+		return arr
 	}
 
 

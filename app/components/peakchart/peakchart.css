@@ -9,8 +9,7 @@ main #peaks-chart {
 }
 
 .triangle {
-	fill: blue;
-	fill-opacity: 0.1;
+	fill-opacity: 0.5;
 	stroke: none;
 }
 .triangle.orange {
@@ -18,4 +17,49 @@ main #peaks-chart {
 }
 .triangle.green {
 	fill: green;
+}
+.triangle.red {
+	fill: red;
+}
+.triangle.blue {
+	fill: blue;
+}
+.triangle.purple {
+	fill: purple;
+}
+.triangle.cyan {
+	fill: cyan;
+}
+.triangle.pink {
+	fill: pink;
+}
+.triangle.fr-it {
+	fill: url(#fr-it-gradient);
+}
+.triangle.ch-it {
+	fill: url(#ch-it-gradient);
+}
+.triangle.ch-fr {
+	fill: url(#ch-fr-gradient);
+}
+.triangle.at-it {
+	fill: url(#at-it-gradient);
+}
+.triangle.at-ch {
+	fill: url(#at-ch-gradient);
+}
+.triangle.at-de {
+	fill: url(#at-de-gradient);
+}
+.triangle.it-si {
+	fill: url(#it-si-gradient);
+}
+.triangle.ch-li {
+	fill: url(#ch-li-gradient);
+}
+.triangle.at-li {
+	fill: url(#at-li-gradient);
+}
+.triangle.at-si {
+	fill: url(#at-si-gradient);
 }

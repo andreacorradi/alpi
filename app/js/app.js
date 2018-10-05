@@ -1,4 +1,4 @@
-;(function(window, $, undefined) {
+;(function(window, undefined) {
 
 	window.APP = {}
 
@@ -14,4 +14,4 @@
 		APP.init()
 	})
 
-})(window, jQuery)
+})(window)
