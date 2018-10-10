@@ -102,9 +102,8 @@ function Peakchart() {
 		triangles.exit().remove()
 	}
 
-	self.greaterThanThreeThousand = function() {
-		//console.log()
-		return mountains.filter(m => m.height > 4000)
+	self.greaterThan = function(par) {
+		return mountains.filter(m => m.height > par)
 	}
 
 	self.zoomSvgTriangle = function(targetW) {
@@ -115,10 +114,12 @@ function Peakchart() {
 			.attr('points', (d, i) => calcPoints(d, i, 1, newSpan))
 	}
 
-	self.highlightTriangle = function(mountainArr) {
+	self.highlightTriangle = function(subset) {
+		let mountainArr = []
+		if (_.isArray(subset)) mountainArr = subset
+		else { mountainArr = mountains.filter(subset).map(m => {return {name: m.mountain, rank: m.rank}})	}
 		d3.selectAll('polygon')
 			.style('fill-opacity', (d, i) => {
-				if (d.mountain === 'Rimpfischhorn') console.log(mountainArr, {name: d.mountain, rank: d.rank})
 				if (objIncludes(mountainArr, {name: d.mountain, rank: d.rank})) {
 					return highOpacity
 				} else return lowOpacity

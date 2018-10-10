@@ -18,9 +18,8 @@
 				},
 				{
 					step: '3',
-					mountain: [{name: 'Grand Combin', rank: 8}],
-					caption: 'Questa è la cima degli stronzi.',
-					mountainFuncKey: 'greaterThanThreeThousand'
+					mountain: m => m.height > 4000,
+					caption: 'Questa è la cima degli stronzi.'
 				}
 			]
 		},

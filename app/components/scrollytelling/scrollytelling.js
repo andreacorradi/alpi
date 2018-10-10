@@ -16,16 +16,26 @@ function ScrollyTelling() {
 		function handleStepEnter(e) {
 		  console.log('enter ' + e.element.dataset.step)
 		  const highlightObj = filterHighlight(e.element.dataset.step)
-		  if (!highlightObj.hasOwnProperty('mountainFuncKey')) {
-	  		APP.peakchart.highlightTriangle(highlightObj.mountain)
-		  } else {
-				const funcName = APP.peakchart[highlightObj.mountainFuncKey]
-				const objToHighlight = funcName()
-		  	const peaksToHighlight = objToHighlight.map(m => {
-		  		return {name: m.mountain, rank: m.rank}
-		  	})
-		  	APP.peakchart.highlightTriangle(peaksToHighlight)
-		  }
+
+		  APP.peakchart.highlightTriangle(highlightObj.mountain)
+
+		  // if (_.isArray(highlightObj.mountain)) {
+		  // 	APP.peakchart.highlightTriangle(highlightObj.mountain)
+		  // } else {
+		  // 	highlightObj.mountain.call(APP.peakchart)
+		  // }
+
+
+		  // if (!highlightObj.hasOwnProperty('mountainFuncKey')) {
+	  	// 	APP.peakchart.highlightTriangle(highlightObj.mountain)
+		  // } else {
+				// const funcName = APP.peakchart[highlightObj.mountainFuncKey]
+				// const objToHighlight = funcName(4000)
+		  // 	const peaksToHighlight = objToHighlight.map(m => {
+		  // 		return {name: m.mountain, rank: m.rank}
+		  // 	})
+		  // 	APP.peakchart.highlightTriangle(peaksToHighlight)
+		  // }
 	  	fillCaption(e.element.dataset.step)
 		}
 		function handleStepExit(e) {
