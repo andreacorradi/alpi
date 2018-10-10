@@ -1,0 +1,15 @@
+#scroll-container {
+	width: 100%;
+	height: auto;
+	position: relative;
+	overflow-y: scroll;
+}
+.tour-caption {
+	display: block;
+	width: 70%;
+	margin: 0 auto;
+	height: 6rem;
+	margin-top: 220%;
+	background: lightgrey;
+	opacity: 0.5;
+}

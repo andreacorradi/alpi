@@ -1,8 +1,21 @@
+header {
+  width: 100%;
+  height: 10vh;
+  pointer-events: all;
+}
+footer {
+  margin-top: 80vh;
+  width: 100%;
+  height: 10vh;
+  padding: 0 1rem;
+  background: #eeeeee;
+  z-index: 9999;
+  pointer-events: all;
+}
 #control {
   width: 100%;
   height: 100%;
 }
-
 .slidecontainer {
   width: 100%;
 }

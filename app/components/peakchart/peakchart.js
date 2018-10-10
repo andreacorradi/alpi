@@ -9,6 +9,7 @@ function Peakchart() {
 
 	const angleThreshold = 100 //to avoid flat connections between mountains
 	const transDuration = 1000
+	const lowOpacity = 0.02
 
 	const countryColors = { 
 		IT: 'purple',
@@ -28,32 +29,12 @@ function Peakchart() {
 	let mountains = null
 	let dataLength = 0
 
-	let countries = []
-	let filterValue = 'All'
-	let orderValue = 'height'
 	let filterField = 'country'
+	let countries = []
+	self.filterValue = 'All'
+	self.orderValue = 'height'
 
-	const scaleY = d3.scaleLinear()
-		.domain([0, 4808])
-		.range([10, containerH - 10])
-
-  function generateGradients() {
-  	countryCouples.forEach((c) => {
-  		const identifier = c.split('/')[0].toLowerCase() + '-' + c.split('/')[1].toLowerCase()
-  		d3.select('svg defs').append('linearGradient')
-	      .attr("id", identifier + "-gradient")
-	      .attr("x1", "0%").attr("y1", "0%")
-      	.attr("x2", "100%").attr("y2", "0%")
-	    .selectAll("stop")
-	      .data([
-	        {offset: "0%", color: countryColors[c.split('/')[0]]},
-	        {offset: "100%", color: countryColors[c.split('/')[1]]}
-	      ])
-	    .enter().append("stop")
-	      .attr("offset", function(d) { return d.offset })
-	      .attr("stop-color", function(d) { return d.color })
-  	})
-  }
+	let scaleY = {}
 
 	self.init = function() {
 		d3.csv("./../scraper/output/mountains.csv", (m) => {
@@ -75,6 +56,9 @@ function Peakchart() {
 		.then(function(_mountains) {
 			//if (error) throw error
 			mountains = _mountains
+			scaleY = d3.scaleLinear()
+				.domain([0, 4808])
+				.range([10, containerH - 10])
 			generateGradients()
 			//drop-downs population
 			countries = getUniqueValuesOfKey(mountains, 'country')
@@ -89,9 +73,9 @@ function Peakchart() {
 	self.updateTriangle = function(options) {
 		mountains = options.mountains || mountains
 		filterField = options.filterField || filterField
-		filterValue = options.filterValue || filterValue
-		orderValue = options.orderValue || orderValue
-		let selectedMountains = filterSortData(mountains, filterField, filterValue, orderValue)
+		self.filterValue = options.filterValue || self.filterValue
+		self.orderValue = options.orderValue || self.orderValue
+		let selectedMountains = filterSortData(mountains, filterField, self.filterValue, self.orderValue)
 		let data = addPrevPointData(selectedMountains)
 		console.log(data)
 		dataLength = data.length
@@ -102,7 +86,6 @@ function Peakchart() {
 	    .data(data)
 	  triangles
 	  	.attr('class', (d) => assignColorClass(d))
-	  	// .style('fill', (d) => assignColor(d))
     	.attr('points', (d, i) => calcPoints(d, i, 0, span))
 	  	.transition()
 	  	.duration(transDuration)
@@ -110,7 +93,6 @@ function Peakchart() {
 	  let newTriangles = triangles
 		  .enter().append('polygon')
 		  	.attr('class', (d) => assignColorClass(d))
-		  	// .style('fill', (d) => assignColor(d))
 		  	.attr('points', (d, i) => calcPoints(d, i, 0, span))
 		  	.transition()
 	  		.duration(transDuration)
@@ -124,6 +106,18 @@ function Peakchart() {
 		d3.selectAll('polygon')
 			.attr('points', (d, i) => calcPoints(d, i, 0, newSpan))
 			.attr('points', (d, i) => calcPoints(d, i, 1, newSpan))
+	}
+
+	self.highlightTriangle = function(mountainArr) {
+		console.log(mountainArr)
+		d3.selectAll('polygon')
+			.style('fill-opacity', (d, i) => {
+				if (mountainArr.includes(d.mountain)) {	return 1 } else return lowOpacity
+			})
+	}
+	self.resetlightTriangle = function() {
+		d3.selectAll('polygon')
+			.style('fill-opacity', 0.3)
 	}
 
 
@@ -187,18 +181,8 @@ function Peakchart() {
 		if (el.country.length === 1) {
 			return 'triangle ' + countryColors[el.country]
 		}	else {
-			const code = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
-			console.log(code)
-			return 'triangle ' + code
-		}
-	}
-
-	function assignColor(el) {
-		if (el.country.length === 1) {
-			return countryColors[el.country]
-		}	else {
-			const code = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
-			return 'url(#' + code + 'gradient)'
+			const gradientClass = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
+			return 'triangle ' + gradientClass
 		}
 	}
 
@@ -207,6 +191,23 @@ function Peakchart() {
 		return arr
 	}
 
+	function generateGradients() {
+  	countryCouples.forEach((c) => {
+  		const identifier = c.split('/')[0].toLowerCase() + '-' + c.split('/')[1].toLowerCase()
+  		d3.select('svg defs').append('linearGradient')
+	      .attr("id", identifier + "-gradient")
+	      .attr("x1", "0%").attr("y1", "0%")
+      	.attr("x2", "100%").attr("y2", "0%")
+	    .selectAll("stop")
+	      .data([
+	        {offset: "0%", color: countryColors[c.split('/')[0]]},
+	        {offset: "100%", color: countryColors[c.split('/')[1]]}
+	      ])
+	    .enter().append("stop")
+	      .attr("offset", function(d) { return d.offset })
+	      .attr("stop-color", function(d) { return d.color })
+  	})
+  }
 
 	return self
 
