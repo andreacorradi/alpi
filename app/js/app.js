@@ -8,14 +8,20 @@
 			steps: [
 				{
 					step: '1',
-					mountain: ['Cima d\'Asta', 'Klosterwappen', 'Céüse'],
-					caption: 'Questa è l\'unica montagna di granito dell\'area dolomitica.'
+					mountain: [{name: 'Rimpfischhorn', rank: 13}, {name: 'Cima Cadin di San Lucano', rank: 710}, {name: 'Mürtschenstock', rank: 1110}],
+					caption: 'Queste montagne sanno di banana.'
 				},
 				{
 					step: '2',
-					mountain: ['Céüse'],
-					caption: 'Questa è la cima più piatta delle Alpi.'
+					mountain: [{name: 'Grand Tournalin', rank: 204}],
+					caption: 'Questa è la cima più appuntita delle Alpi: vietato sedersi in cima per i poveri di spirito.'
 				},
+				{
+					step: '3',
+					mountain: [{name: 'Grand Combin', rank: 8}],
+					caption: 'Questa è la cima degli stronzi.',
+					mountainFuncKey: 'greaterThanThreeThousand'
+				}
 			]
 		},
 		{
@@ -23,14 +29,14 @@
 			steps: [
 				{
 					step: '1',
-					mountain: ['Mont Charvin'],
+					mountain: ['Mont Chalancha'],
 					caption: 'Questa è la montagna più a Ovest delle Alpi.'
 				},
 				{
 					step: '2',
 					mountain: ['Klosterwappen'],
 					caption: 'Questa è la montagna più a Est delle Alpi.'
-				},
+				}
 			]
 		}
 	]

@@ -10,6 +10,7 @@ function Peakchart() {
 	const angleThreshold = 100 //to avoid flat connections between mountains
 	const transDuration = 1000
 	const lowOpacity = 0.02
+	const highOpacity = 0.8
 
 	const countryColors = { 
 		IT: 'purple',
@@ -94,10 +95,16 @@ function Peakchart() {
 		  .enter().append('polygon')
 		  	.attr('class', (d) => assignColorClass(d))
 		  	.attr('points', (d, i) => calcPoints(d, i, 0, span))
+		  	.on('click', (d) => console.log(d.mountain + ', ' + d.height))
 		  	.transition()
 	  		.duration(transDuration)
 		  	.attr('points', (d, i) => calcPoints(d, i, 1, span))
 		triangles.exit().remove()
+	}
+
+	self.greaterThanThreeThousand = function() {
+		//console.log()
+		return mountains.filter(m => m.height > 4000)
 	}
 
 	self.zoomSvgTriangle = function(targetW) {
@@ -109,10 +116,12 @@ function Peakchart() {
 	}
 
 	self.highlightTriangle = function(mountainArr) {
-		console.log(mountainArr)
 		d3.selectAll('polygon')
 			.style('fill-opacity', (d, i) => {
-				if (mountainArr.includes(d.mountain)) {	return 1 } else return lowOpacity
+				if (d.mountain === 'Rimpfischhorn') console.log(mountainArr, {name: d.mountain, rank: d.rank})
+				if (objIncludes(mountainArr, {name: d.mountain, rank: d.rank})) {
+					return highOpacity
+				} else return lowOpacity
 			})
 	}
 	self.resetlightTriangle = function() {
@@ -120,6 +129,12 @@ function Peakchart() {
 			.style('fill-opacity', 0.3)
 	}
 
+
+	function objIncludes(arrOfObj, obj) {
+		let res = arrOfObj.filter((e) => _.isEqual(e, obj))
+		if (res.length > 0) return true
+		else return false
+	}
 
 	function filterSortData(_data, filterField, filterValue, sortField) {
 		return _data
