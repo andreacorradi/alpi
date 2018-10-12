@@ -3,8 +3,6 @@ function Peakchart() {
 	var self = this
 
 	const container = document.getElementById("peaks-container")
-	const countrySel = document.getElementById("country-sel")
-	const orderSel = document.getElementById("order-sel")
 	const svg = document.getElementById("peaks-chart")
 
 	const angleThreshold = 100 //to avoid flat connections between mountains
@@ -28,63 +26,22 @@ function Peakchart() {
 	let svgW = svg.clientWidth
 	let containerH = container.clientHeight
 
-	let mountains = null
-	self.data = null
+	let dataset = []
 	let dataLength = 0
-
-	let filterField = 'country'
-	let countries = []
-	self.filterValue = 'All'
-	self.orderValue = 'height'
-
 	let scaleY = {}
+	
 
-	self.init = function() {
-		d3.csv("./../scraper/output/mountains.csv", (m) => {
-			return {
-				rank: +m.Rank,
-				mountain: m.Mountain,
-				mountainLink: m.MountainLink,
-				mountainImgSrc: m.MountainImgSrc,
-				height: +m.Height,
-				drop: +m.Drop,
-				lat: +m.lat,
-				lon: +m.lon,
-				range: m.Range,
-				region: m.Region,
-				country: generateCountryField(m.Country),
-				firstascent: +m.Firstascent
-			}
-		})
-		.then(function(_mountains) {
-			//if (error) throw error
-			mountains = _mountains
-			scaleY = d3.scaleLinear()
-				.domain([0, 4808])
-				.range([10, containerH - 10])
-			generateGradients()
-			//drop-downs population
-			countries = getUniqueValuesOfKey(mountains, 'country')
-			countries.unshift("All")
-			APP.ui.populateSel(countrySel, countries)
-			const orderPars = ['height', 'lat', 'drop']
-			APP.ui.populateSel(orderSel, orderPars)
-			self.updateTriangle({})
-		})
-	}
-
-	self.updateTriangle = function(options) {
-		mountains = options.mountains || mountains
-		filterField = options.filterField || filterField
-		self.filterValue = options.filterValue || self.filterValue
-		self.orderValue = options.orderValue || self.orderValue
-		let selectedMountains = filterSortData(mountains, filterField, self.filterValue, self.orderValue)
-		data = addPrevPointData(selectedMountains)
-		console.log(data)
-		dataLength = data.length
+	self.updateTriangle = function(_dataset) {
+		dataset = _dataset
+		console.log(dataset)
+		scaleY = d3.scaleLinear()
+			.domain([0, 4808])
+			.range([10, containerH - 10])
+		generateGradients()
+		dataLength = dataset.length
 		let span = svgW / dataLength
 		let triangles = d3.select('svg').selectAll('polygon')
-	    .data(data)
+	    .data(dataset)
 	  triangles
 	  	.attr('class', (d) => assignColorClass(d))
     	.attr('points', (d, i) => calcPoints(d, i, 0, span))
@@ -102,10 +59,6 @@ function Peakchart() {
 		triangles.exit().remove()
 	}
 
-	self.greaterThan = function(par) {
-		return mountains.filter(m => m.height > par)
-	}
-
 	self.zoomSvgTriangle = function(targetW) {
 		svg.clientWidth = targetW
 		const newSpan = targetW / dataLength
@@ -117,7 +70,7 @@ function Peakchart() {
 	self.highlightTriangle = function(subset) {
 		let mountainArr = []
 		if (_.isArray(subset)) mountainArr = subset
-		else { mountainArr = mountains.filter(subset).map(m => {return {name: m.mountain, rank: m.rank}})	}
+		else { mountainArr = dataset.filter(subset).map(m => {return {name: m.mountain, rank: m.rank}})	}
 		d3.selectAll('polygon')
 			.style('fill-opacity', (d, i) => {
 				if (objIncludes(mountainArr, {name: d.mountain, rank: d.rank})) {
@@ -135,45 +88,6 @@ function Peakchart() {
 		let res = arrOfObj.filter((e) => _.isEqual(e, obj))
 		if (res.length > 0) return true
 		else return false
-	}
-
-	function filterSortData(_data, filterField, filterValue, sortField) {
-		return _data
-			.filter((d) => {
-				if (filterValue === 'All') return d
-				else return d[filterField].includes(filterValue)
-			})
-			.sort((a,b) => {
-				if (sortField === 'lat') return a[sortField] - b[sortField]
-				else return b[sortField] - a[sortField]
-			})
-	}
-
-	function getUniqueValuesOfKey(array, key){ 
-		let countries = []
-	  array.forEach((el, i) => {
-	  	el[key].forEach((c) => {
-	  		if (!countries.includes(c)) {
-	  			countries.push(c)
-	  		}
-	  	})
-	  })
-	  return countries
-	}
-
-	function addPrevPointData(_data) { //takes a dataset and adds to each record some height and drop info of the previous record
-		let temp = null
-		return _data.map((m, i) => {
-			let obj = Object.assign({}, m)
-			if (i !== 0) {
-				obj.previous = {
-					height: temp.height,
-					drop: temp.drop
-				}	
-			}
-			temp = m
-			return obj
-		})
 	}
 
 	function calcPoints(d, i, step, span) { //computation of of the two baseline vertexes of the triangle
@@ -200,11 +114,6 @@ function Peakchart() {
 			const gradientClass = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
 			return 'triangle ' + gradientClass
 		}
-	}
-
-	function generateCountryField(str) {
-		const arr = str.split('/')
-		return arr
 	}
 
 	function generateGradients() {

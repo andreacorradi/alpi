@@ -25,11 +25,11 @@ function ScrollyTelling() {
 		}
 
 		function filterHighlight(step) {
-			const selHighlightMode = APP.highlight.filter((h) => h.mode === APP.peakchart.orderValue)[0].steps
+			const selHighlightMode = highlightData.filter((h) => h.mode === APP.data.orderValue)[0].steps
 			return selHighlightMode[step]
 		}
 		function fillCaption(step) {
-			const selHighlightMode = APP.highlight.filter((h) => h.mode === APP.peakchart.orderValue)[0].steps
+			const selHighlightMode = highlightData.filter((h) => h.mode === APP.data.orderValue)[0].steps
 			const caption = selHighlightMode[step].caption
 			const el = d3.select('#scrollytelling .tour-caption[data-step="' + (step) + '"]')
 			el.text(caption)

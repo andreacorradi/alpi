@@ -20,13 +20,15 @@ function Ui() {
 			initView()
 			APP.peakchart.resetlightTriangle()
 			let selCountry = e.target.options[e.target.selectedIndex].value
-			APP.peakchart.updateTriangle({filterValue: selCountry})
+			const currentDataset = APP.data.prepareData({filterValue: selCountry})
+			APP.peakchart.updateTriangle(currentDataset)
 		}
 		orderSel.onchange = function(e) {
 			initView()
 			APP.peakchart.resetlightTriangle()
 			let selOrder = e.target.options[e.target.selectedIndex].value
-			APP.peakchart.updateTriangle({orderValue: selOrder})
+			const currentDataset = APP.data.prepareData({orderValue: selOrder})
+			APP.peakchart.updateTriangle(currentDataset)
 		}
 	}
 
