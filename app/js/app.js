@@ -19,7 +19,7 @@
 				{
 					step: '3',
 					mountain: m => m.height > 4000,
-					caption: 'Questa è la cima degli stronzi.'
+					caption: 'Ci sono * cime sopra i 4000 metri.'
 				}
 			]
 		},
@@ -28,13 +28,18 @@
 			steps: [
 				{
 					step: '1',
-					mountain: ['Mont Chalancha'],
+					mountain: [{name: 'Mont Chalancha', rank: 1446}],
 					caption: 'Questa è la montagna più a Ovest delle Alpi.'
 				},
 				{
 					step: '2',
-					mountain: ['Klosterwappen'],
+					mountain: [{name: 'Klosterwappen', rank: 1479}],
 					caption: 'Questa è la montagna più a Est delle Alpi.'
+				},
+				{
+					step: '3',
+					mountain: m => m.height > 4000,
+					caption: 'Ci sono * cime sopra i 4000 metri.'
 				}
 			]
 		}

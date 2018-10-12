@@ -10,6 +10,7 @@ function Peakchart() {
 	const angleThreshold = 100 //to avoid flat connections between mountains
 	const transDuration = 1000
 	const lowOpacity = 0.02
+	const stdOpacity = 0.3
 	const highOpacity = 0.8
 
 	const countryColors = { 
@@ -28,6 +29,7 @@ function Peakchart() {
 	let containerH = container.clientHeight
 
 	let mountains = null
+	self.data = null
 	let dataLength = 0
 
 	let filterField = 'country'
@@ -77,12 +79,10 @@ function Peakchart() {
 		self.filterValue = options.filterValue || self.filterValue
 		self.orderValue = options.orderValue || self.orderValue
 		let selectedMountains = filterSortData(mountains, filterField, self.filterValue, self.orderValue)
-		let data = addPrevPointData(selectedMountains)
+		data = addPrevPointData(selectedMountains)
 		console.log(data)
 		dataLength = data.length
 		let span = svgW / dataLength
-		//const maxH = d3.max(data, d => d.height)
-		APP.ui.zoomBox('0') //when data are filtered or sorted the zoom comes back to zero
 		let triangles = d3.select('svg').selectAll('polygon')
 	    .data(data)
 	  triangles
@@ -127,7 +127,7 @@ function Peakchart() {
 	}
 	self.resetlightTriangle = function() {
 		d3.selectAll('polygon')
-			.style('fill-opacity', 0.3)
+			.style('fill-opacity', stdOpacity)
 	}
 
 

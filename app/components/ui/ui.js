@@ -10,16 +10,21 @@ function Ui() {
 	const orderSel = document.getElementById("order-sel")
 
 	self.init = function() {
+		initView()
 		slider.oninput = function(e) {
 		  output.innerHTML = e.target.value
 		  self.zoomBox(e.target.value)
 		  APP.peakchart.zoomSvgTriangle(container.clientWidth)
 		}
 		countrySel.onchange = function(e) {
+			initView()
+			APP.peakchart.resetlightTriangle()
 			let selCountry = e.target.options[e.target.selectedIndex].value
 			APP.peakchart.updateTriangle({filterValue: selCountry})
 		}
 		orderSel.onchange = function(e) {
+			initView()
+			APP.peakchart.resetlightTriangle()
 			let selOrder = e.target.options[e.target.selectedIndex].value
 			APP.peakchart.updateTriangle({orderValue: selOrder})
 		}
@@ -41,6 +46,11 @@ function Ui() {
 			option.appendChild(document.createTextNode(c))
 			select.appendChild(option)
 		})
+	}
+
+	function initView() {
+		window.scrollTo(pageXOffset, 0)
+		self.zoomBox('0') //when data are filtered or sorted the zoom comes back to zero
 	}
 
 	return self

@@ -14,33 +14,14 @@ function ScrollyTelling() {
 		  .onStepExit(handleStepExit)
 
 		function handleStepEnter(e) {
-		  console.log('enter ' + e.element.dataset.step)
-		  const highlightObj = filterHighlight(e.element.dataset.step)
-
+		  console.log('enter ' + e.index)
+		  const highlightObj = filterHighlight(e.index)
 		  APP.peakchart.highlightTriangle(highlightObj.mountain)
-
-		  // if (_.isArray(highlightObj.mountain)) {
-		  // 	APP.peakchart.highlightTriangle(highlightObj.mountain)
-		  // } else {
-		  // 	highlightObj.mountain.call(APP.peakchart)
-		  // }
-
-
-		  // if (!highlightObj.hasOwnProperty('mountainFuncKey')) {
-	  	// 	APP.peakchart.highlightTriangle(highlightObj.mountain)
-		  // } else {
-				// const funcName = APP.peakchart[highlightObj.mountainFuncKey]
-				// const objToHighlight = funcName(4000)
-		  // 	const peaksToHighlight = objToHighlight.map(m => {
-		  // 		return {name: m.mountain, rank: m.rank}
-		  // 	})
-		  // 	APP.peakchart.highlightTriangle(peaksToHighlight)
-		  // }
-	  	fillCaption(e.element.dataset.step)
+	  	fillCaption(e.index)
 		}
 		function handleStepExit(e) {
-		  console.log('exit ' + e.element.innerHTML)
-		  //APP.peakchart.resetlightTriangle()
+		  console.log('exit ' + e.index)
+		  if (e.index === 0 && e.direction === "up") APP.peakchart.resetlightTriangle() 
 		}
 
 		function filterHighlight(step) {
