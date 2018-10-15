@@ -22,6 +22,8 @@ function Ui() {
 			let selCountry = e.target.options[e.target.selectedIndex].value
 			const currentDataset = APP.data.prepareData({filterValue: selCountry})
 			APP.peakchart.updateTriangle(currentDataset)
+			APP.data.selHighlight = APP.data.prepareHighlight({filterValue: selCountry})
+			console.log(APP.data.selHighlight)
 		}
 		orderSel.onchange = function(e) {
 			initView()
@@ -29,6 +31,8 @@ function Ui() {
 			let selOrder = e.target.options[e.target.selectedIndex].value
 			const currentDataset = APP.data.prepareData({orderValue: selOrder})
 			APP.peakchart.updateTriangle(currentDataset)
+			APP.data.selHighlight = APP.data.prepareHighlight({orderValue: selOrder})
+			console.log(APP.data.selHighlight)
 		}
 	}
 

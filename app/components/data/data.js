@@ -9,8 +9,10 @@ function Data() {
 	const orderSel = document.getElementById("order-sel")
 	const orderPars = ['height', 'lat', 'drop']
 	let mountains = []
+	let dataset = []
 	let countries = []
 	let filterField = 'country'
+	self.selHighlight = highlightData
 
 	self.init = function() {
 		d3.csv("./../scraper/output/mountains.csv", (m) => {
@@ -46,8 +48,45 @@ function Data() {
 		self.filterValue = options.filterValue || self.filterValue
 		self.orderValue = options.orderValue || self.orderValue
 		let selectedMountains = filterSortData(mountains, filterField, self.filterValue, self.orderValue)
-		let dataset = addPrevPointData(selectedMountains)
+		dataset = addPrevPointData(selectedMountains)
 		return dataset
+	}
+
+	self.prepareHighlight = function(options = {}) {
+		self.filterValue = options.filterValue || self.filterValue
+		self.orderValue = options.orderValue || self.orderValue
+		if (self.filterValue === 'All') {
+			return highlightData.filter((h) => h.mode === self.orderValue)[0].steps
+		} else {
+			const selHighlightMode = highlightData.filter((h) => h.mode === self.orderValue)[0].steps
+			const selHighlight = []
+			selHighlightMode.forEach((s) => {
+				if (_.isArray(s.mountain)) {
+					let mountainsInCountry = []
+					s.mountain.forEach((p) => {
+						let matchedPeak
+						dataset.forEach((m) => {
+							if (_.isEqual({name: m.mountain, rank: m.rank}, p)) {
+								matchedPeak = m
+								if (matchedPeak !== undefined && (matchedPeak.country.includes(self.filterValue) || self.filterValue === 'All')) {
+									mountainsInCountry.push(p)
+								}
+							}
+						})
+					})
+					selHighlight.push({step: s.step, mountain: mountainsInCountry, caption: s.caption})
+				} else {
+					selHighlight.push(s) // mountain è una funzione, ritorno s così com'è
+				}
+			})
+			return selHighlight
+		}
+	}
+
+	function objIncludes(arrOfObj, obj) {
+		let res = arrOfObj.filter((e) => _.isEqual(e, obj))
+		if (res.length > 0) return true
+		else return false
 	}
 
 	function filterSortData(_data, filterField, filterValue, sortField) {
