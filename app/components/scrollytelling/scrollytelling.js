@@ -1,7 +1,8 @@
 function ScrollyTelling() {
 
 	var self = this
-	let highlightSet = []
+
+	//const scrollingContainer = document.getElementById("scroll-container")
 
 	self.init = function() {
 		const scroller = scrollama()
@@ -12,7 +13,21 @@ function ScrollyTelling() {
 		  })
 		  .onStepEnter(handleStepEnter)
 		  .onStepExit(handleStepExit)
-		APP.data.selHighlight = APP.data.prepareHighlight()
+	}
+
+	self.initScrollingSet = function() {
+		resetScrollingSet()
+		d3.select('#scrollytelling #scroll-container').selectAll('.tour-caption')
+			.data(APP.data.selHighlight)
+			.enter()
+			.append('div')
+				.attr('class', 'tour-caption')
+				.attr('data-step', (d, i) => i.toString())
+		self.init()
+	}
+
+	function resetScrollingSet() {
+		d3.select('#scrollytelling #scroll-container').selectAll('.tour-caption').remove()
 	}
 
 	function handleStepEnter(e) {

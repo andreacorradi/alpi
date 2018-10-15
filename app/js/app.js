@@ -8,7 +8,6 @@
 		APP.scrollyTelling = new ScrollyTelling()
 		APP.ui = new Ui()
 		APP.data.init()
-		APP.scrollyTelling.init()
 		APP.ui.init()
 	}
 

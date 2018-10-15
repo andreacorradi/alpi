@@ -23,7 +23,8 @@ function Ui() {
 			const currentDataset = APP.data.prepareData({filterValue: selCountry})
 			APP.peakchart.updateTriangle(currentDataset)
 			APP.data.selHighlight = APP.data.prepareHighlight({filterValue: selCountry})
-			console.log(APP.data.selHighlight)
+			APP.scrollyTelling.initScrollingSet()
+			//console.log(APP.data.selHighlight)
 		}
 		orderSel.onchange = function(e) {
 			initView()
@@ -32,7 +33,8 @@ function Ui() {
 			const currentDataset = APP.data.prepareData({orderValue: selOrder})
 			APP.peakchart.updateTriangle(currentDataset)
 			APP.data.selHighlight = APP.data.prepareHighlight({orderValue: selOrder})
-			console.log(APP.data.selHighlight)
+			APP.scrollyTelling.initScrollingSet()
+			//console.log(APP.data.selHighlight)
 		}
 	}
 

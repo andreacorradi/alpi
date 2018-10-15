@@ -40,6 +40,9 @@ function Data() {
 			APP.ui.populateSel(orderSel, orderPars)
 			let fullDataset = self.prepareData()
 			APP.peakchart.updateTriangle(fullDataset)
+			self.selHighlight = self.prepareHighlight()
+			APP.scrollyTelling.initScrollingSet()
+			APP.scrollyTelling.init()
 		})
 	}
 
@@ -56,6 +59,7 @@ function Data() {
 		self.filterValue = options.filterValue || self.filterValue
 		self.orderValue = options.orderValue || self.orderValue
 		if (self.filterValue === 'All') {
+			console.log('selHighlight: ', highlightData.filter((h) => h.mode === self.orderValue)[0].steps)
 			return highlightData.filter((h) => h.mode === self.orderValue)[0].steps
 		} else {
 			const selHighlightMode = highlightData.filter((h) => h.mode === self.orderValue)[0].steps
@@ -79,7 +83,9 @@ function Data() {
 					selHighlight.push(s) // mountain è una funzione, ritorno s così com'è
 				}
 			})
-			return selHighlight
+			const selHighlightNotEmpty = selHighlight.filter((h) => h.mountain.length !== 0)
+			console.log('selHighlightNotEmpty: ', selHighlightNotEmpty) 
+			return selHighlightNotEmpty
 		}
 	}
 
