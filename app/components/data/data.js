@@ -42,7 +42,6 @@ function Data() {
 			APP.peakchart.updateTriangle(fullDataset)
 			self.selHighlight = self.prepareHighlight()
 			APP.scrollyTelling.initScrollingSet()
-			APP.scrollyTelling.init()
 		})
 	}
 
@@ -83,7 +82,10 @@ function Data() {
 					selHighlight.push(s) // mountain è una funzione, ritorno s così com'è
 				}
 			})
-			const selHighlightNotEmpty = selHighlight.filter((h) => h.mountain.length !== 0)
+			let selHighlightNotEmpty = selHighlight.filter((h) => h.mountain.length !== 0)
+			selHighlightNotEmpty.forEach((h, i) => {
+				h.step = (i+1).toString()
+			})
 			console.log('selHighlightNotEmpty: ', selHighlightNotEmpty) 
 			return selHighlightNotEmpty
 		}

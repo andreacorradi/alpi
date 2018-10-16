@@ -4,17 +4,6 @@ function ScrollyTelling() {
 
 	//const scrollingContainer = document.getElementById("scroll-container")
 
-	self.init = function() {
-		const scroller = scrollama()
-		scroller
-		  .setup({
-		  	offset: 0.9,
-		    step: '.tour-caption' // class name of trigger steps
-		  })
-		  .onStepEnter(handleStepEnter)
-		  .onStepExit(handleStepExit)
-	}
-
 	self.initScrollingSet = function() {
 		resetScrollingSet()
 		d3.select('#scrollytelling #scroll-container').selectAll('.tour-caption')
@@ -26,6 +15,17 @@ function ScrollyTelling() {
 		self.init()
 	}
 
+	self.init = function() {
+		const scroller = scrollama()
+		scroller
+		  .setup({
+		  	offset: 0.9,
+		    step: '.tour-caption' // class name of trigger steps
+		  })
+		  .onStepEnter(handleStepEnter)
+		  .onStepExit(handleStepExit)
+	}
+
 	function resetScrollingSet() {
 		d3.select('#scrollytelling #scroll-container').selectAll('.tour-caption').remove()
 	}
@@ -33,8 +33,8 @@ function ScrollyTelling() {
 	function handleStepEnter(e) {
 	  console.log('enter ' + e.index)
 	  const highlightObj = APP.data.selHighlight[e.index]
-	  APP.peakchart.highlightTriangle(highlightObj.mountain)
-  	fillCaption(e.index)
+	  APP.peakchart.highlightTriangle(highlightObj.mountain, e.index)
+  	fillCaption(highlightObj.mountain, e.index)
 	}
 
 	function handleStepExit(e) {
@@ -42,11 +42,13 @@ function ScrollyTelling() {
 	  if (e.index === 0 && e.direction === "up") APP.peakchart.resetlightTriangle() 
 	}
 
-	function fillCaption(step) {
-		const selHighlightMode = highlightData.filter((h) => h.mode === APP.data.orderValue)[0].steps
-		const caption = selHighlightMode[step].caption
+	function fillCaption(subset, step) {
 		const el = d3.select('#scrollytelling .tour-caption[data-step="' + (step) + '"]')
-		el.text(caption)
+		const caption = APP.data.selHighlight[step].caption
+		let currCaption
+		if (_.isArray(subset)) currCaption = caption
+		else { currCaption = caption.split('*')[0] + APP.peakchart.calcPar(subset) + caption.split('*')[1] }
+		el.text(currCaption)
 	}
 
 	return self

@@ -16,6 +16,11 @@ const highlightData = [
 				step: '3',
 				mountain: m => m.height > 4000,
 				caption: 'Ci sono * cime sopra i 4000 metri.'
+			},
+			{
+				step: '4',
+				mountain: m => m.height < 4000 && m.height > 3000,
+				caption: 'Ci sono * cime fra i 3000 e i 4000 metri.'
 			}
 		]
 	},

@@ -67,7 +67,7 @@ function Peakchart() {
 			.attr('points', (d, i) => calcPoints(d, i, 1, newSpan))
 	}
 
-	self.highlightTriangle = function(subset) {
+	self.highlightTriangle = function(subset, step) {
 		let mountainArr = []
 		if (_.isArray(subset)) mountainArr = subset
 		else { mountainArr = dataset.filter(subset).map(m => {return {name: m.mountain, rank: m.rank}})	}
@@ -78,9 +78,16 @@ function Peakchart() {
 				} else return lowOpacity
 			})
 	}
+
 	self.resetlightTriangle = function() {
 		d3.selectAll('polygon')
 			.style('fill-opacity', stdOpacity)
+	}
+
+	self.calcPar = function(subset) {
+		let mountainArr = []
+		if (!_.isArray(subset)) mountainArr = dataset.filter(subset)
+		return mountainArr.length
 	}
 
 

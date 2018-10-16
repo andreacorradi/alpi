@@ -13,3 +13,6 @@
 	background: lightgrey;
 	opacity: 0.5;
 }
+.tour-caption:last-child {
+	margin-bottom: 220%;
+}
