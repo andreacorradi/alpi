@@ -2,12 +2,14 @@ function ScrollyTelling() {
 
 	var self = this
 
-	//const scrollingContainer = document.getElementById("scroll-container")
+	let highlightObjSet = highlightData
 
-	self.initScrollingSet = function() {
+	self.initScrollingSet = function(set) {
+		highlightObjSet = set
+		console.log('highlightObjSet: ', highlightObjSet)
 		resetScrollingSet()
 		d3.select('#scrollytelling #scroll-container').selectAll('.tour-caption')
-			.data(APP.data.selHighlight)
+			.data(highlightObjSet)
 			.enter()
 			.append('div')
 				.attr('class', 'tour-caption')
@@ -32,9 +34,9 @@ function ScrollyTelling() {
 
 	function handleStepEnter(e) {
 	  console.log('enter ' + e.index)
-	  const highlightObj = APP.data.selHighlight[e.index]
-	  APP.peakchart.highlightTriangle(highlightObj.mountain, e.index)
-  	fillCaption(highlightObj.mountain, e.index)
+	  const highlightEls = highlightObjSet[e.index].mountain
+	  APP.peakchart.highlightTriangle(highlightEls)
+  	fillCaption(e.index)
 	}
 
 	function handleStepExit(e) {
@@ -42,12 +44,12 @@ function ScrollyTelling() {
 	  if (e.index === 0 && e.direction === "up") APP.peakchart.resetlightTriangle() 
 	}
 
-	function fillCaption(subset, step) {
+	function fillCaption(step) {
 		const el = d3.select('#scrollytelling .tour-caption[data-step="' + (step) + '"]')
-		const caption = APP.data.selHighlight[step].caption
+		const caption = highlightObjSet[step].caption
 		let currCaption
-		if (_.isArray(subset)) currCaption = caption
-		else { currCaption = caption.split('*')[0] + APP.peakchart.calcPar(subset) + caption.split('*')[1] }
+		if (!caption.includes('*')) currCaption = caption
+		else currCaption = caption.split('*')[0] + highlightObjSet[step].mountain.length + caption.split('*')[1]
 		el.text(currCaption)
 	}
 

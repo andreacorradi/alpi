@@ -2,8 +2,8 @@ function Data() {
 
 	var self = this
 
-	self.filterValue = 'All'
-	self.orderValue = 'height'
+	filterValue = 'All'
+	orderValue = 'height'
 
 	const countrySel = document.getElementById("country-sel")
 	const orderSel = document.getElementById("order-sel")
@@ -12,7 +12,7 @@ function Data() {
 	let dataset = []
 	let countries = []
 	let filterField = 'country'
-	self.selHighlight = highlightData
+	let selHighlight = highlightData
 
 	self.init = function() {
 		d3.csv("./../scraper/output/mountains.csv", (m) => {
@@ -35,60 +35,68 @@ function Data() {
 			//if (error) throw error
 			mountains = _mountains
 			countries = getUniqueValuesOfKey(_mountains, 'country')
-			countries.unshift("All")
+			countries.unshift('All')
 			APP.ui.populateSel(countrySel, countries)
 			APP.ui.populateSel(orderSel, orderPars)
-			let fullDataset = self.prepareData()
-			APP.peakchart.updateTriangle(fullDataset)
-			self.selHighlight = self.prepareHighlight()
-			APP.scrollyTelling.initScrollingSet()
+			dataset = self.prepareData()
+			APP.peakchart.updateTriangle(dataset)
+			selHighlight = self.prepareHighlight()
+			APP.scrollyTelling.initScrollingSet(selHighlight)
 		})
 	}
 
+	// filter by country, sort by mode and add info about previous data point
 	self.prepareData = function(options = {}) {
 		filterField = options.filterField || filterField
-		self.filterValue = options.filterValue || self.filterValue
-		self.orderValue = options.orderValue || self.orderValue
-		let selectedMountains = filterSortData(mountains, filterField, self.filterValue, self.orderValue)
+		filterValue = options.filterValue || filterValue
+		orderValue = options.orderValue || orderValue
+		let selectedMountains = filterSortData(mountains, filterField, filterValue, orderValue)
 		dataset = addPrevPointData(selectedMountains)
 		return dataset
 	}
 
+	// filter by mode and by country
 	self.prepareHighlight = function(options = {}) {
-		self.filterValue = options.filterValue || self.filterValue
-		self.orderValue = options.orderValue || self.orderValue
-		if (self.filterValue === 'All') {
-			console.log('selHighlight: ', highlightData.filter((h) => h.mode === self.orderValue)[0].steps)
-			return highlightData.filter((h) => h.mode === self.orderValue)[0].steps
+		filterValue = options.filterValue || filterValue
+		orderValue = options.orderValue || orderValue
+		let selHighlightMode = highlightData.filter((h) => h.mode === orderValue)[0].steps
+
+		// se una funzione è passata nella proprietà mountain, la valuto generando un array
+		let valHighlight = []
+		selHighlightMode.forEach((s) => {
+			if (!_.isArray(s.mountain)) {
+				const mountainArr = dataset.filter(s.mountain).map(m => {return {name: m.mountain, rank: m.rank}})
+				valHighlight.push({step: s.step, mountain: mountainArr, caption: s.caption})
+			} else valHighlight.push(s)
+		})
+
+		let selHighlight = []
+		if (filterValue === 'All') {
+			selHighlight = valHighlight
 		} else {
-			const selHighlightMode = highlightData.filter((h) => h.mode === self.orderValue)[0].steps
-			const selHighlight = []
-			selHighlightMode.forEach((s) => {
-				if (_.isArray(s.mountain)) {
-					let mountainsInCountry = []
-					s.mountain.forEach((p) => {
-						let matchedPeak
-						dataset.forEach((m) => {
-							if (_.isEqual({name: m.mountain, rank: m.rank}, p)) {
-								matchedPeak = m
-								if (matchedPeak !== undefined && (matchedPeak.country.includes(self.filterValue) || self.filterValue === 'All')) {
-									mountainsInCountry.push(p)
-								}
+			valHighlight.forEach((s) => {
+				let mountainsInCountry = []
+				s.mountain.forEach((p) => {
+					let matchedPeak
+					dataset.forEach((m) => {
+						if (_.isEqual({name: m.mountain, rank: m.rank}, p)) {
+							matchedPeak = m
+							if (matchedPeak !== undefined && (matchedPeak.country.includes(filterValue) || filterValue === 'All')) {
+								mountainsInCountry.push(p)
 							}
-						})
+						}
 					})
-					selHighlight.push({step: s.step, mountain: mountainsInCountry, caption: s.caption})
-				} else {
-					selHighlight.push(s) // mountain è una funzione, ritorno s così com'è
-				}
+				})
+				selHighlight.push({step: s.step, mountain: mountainsInCountry, caption: s.caption})
 			})
-			let selHighlightNotEmpty = selHighlight.filter((h) => h.mountain.length !== 0)
-			selHighlightNotEmpty.forEach((h, i) => {
-				h.step = (i+1).toString()
-			})
-			console.log('selHighlightNotEmpty: ', selHighlightNotEmpty) 
-			return selHighlightNotEmpty
 		}
+
+		// removes the entries with no mountains and appends a step number
+		let selHighlightNotEmpty = selHighlight.filter((h) => h.mountain.length !== 0)
+		selHighlightNotEmpty.forEach((h, i) => {
+			h.step = (i+1).toString()
+		})
+		return selHighlightNotEmpty
 	}
 
 	function objIncludes(arrOfObj, obj) {

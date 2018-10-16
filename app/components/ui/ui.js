@@ -17,24 +17,10 @@ function Ui() {
 		  APP.peakchart.zoomSvgTriangle(container.clientWidth)
 		}
 		countrySel.onchange = function(e) {
-			initView()
-			APP.peakchart.resetlightTriangle()
-			let selCountry = e.target.options[e.target.selectedIndex].value
-			const currentDataset = APP.data.prepareData({filterValue: selCountry})
-			APP.peakchart.updateTriangle(currentDataset)
-			APP.data.selHighlight = APP.data.prepareHighlight({filterValue: selCountry})
-			APP.scrollyTelling.initScrollingSet()
-			//console.log(APP.data.selHighlight)
+			updateView(e, 'filter')
 		}
 		orderSel.onchange = function(e) {
-			initView()
-			APP.peakchart.resetlightTriangle()
-			let selOrder = e.target.options[e.target.selectedIndex].value
-			const currentDataset = APP.data.prepareData({orderValue: selOrder})
-			APP.peakchart.updateTriangle(currentDataset)
-			APP.data.selHighlight = APP.data.prepareHighlight({orderValue: selOrder})
-			APP.scrollyTelling.initScrollingSet()
-			//console.log(APP.data.selHighlight)
+			updateView(e, 'order')
 		}
 	}
 
@@ -54,6 +40,22 @@ function Ui() {
 			option.appendChild(document.createTextNode(c))
 			select.appendChild(option)
 		})
+	}
+
+	function updateView(e, field) {
+		initView()
+		let currentDataset = []
+		let currentHighlight = []
+		let selPar = e.target.options[e.target.selectedIndex].value
+		if (field === 'filter') {
+			currentDataset = APP.data.prepareData({filterValue: selPar})
+			currentHighlight = APP.data.prepareHighlight({filterValue: selPar})
+		} else {
+			currentDataset = APP.data.prepareData({orderValue: selPar})
+			currentHighlight = APP.data.prepareHighlight({orderValue: selPar})
+		}
+		APP.peakchart.updateTriangle(currentDataset)
+		APP.scrollyTelling.initScrollingSet(currentHighlight)
 	}
 
 	function initView() {

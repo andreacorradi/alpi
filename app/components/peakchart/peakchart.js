@@ -67,13 +67,10 @@ function Peakchart() {
 			.attr('points', (d, i) => calcPoints(d, i, 1, newSpan))
 	}
 
-	self.highlightTriangle = function(subset, step) {
-		let mountainArr = []
-		if (_.isArray(subset)) mountainArr = subset
-		else { mountainArr = dataset.filter(subset).map(m => {return {name: m.mountain, rank: m.rank}})	}
+	self.highlightTriangle = function(subset) {
 		d3.selectAll('polygon')
 			.style('fill-opacity', (d, i) => {
-				if (objIncludes(mountainArr, {name: d.mountain, rank: d.rank})) {
+				if (objIncludes(subset, {name: d.mountain, rank: d.rank})) {
 					return highOpacity
 				} else return lowOpacity
 			})
