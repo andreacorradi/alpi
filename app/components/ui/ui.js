@@ -60,6 +60,7 @@ function Ui() {
 
 	function initView() {
 		window.scrollTo(pageXOffset, 0)
+		APP.peakchart.resetlightTriangle()
 		self.zoomBox('0') //when data are filtered or sorted the zoom comes back to zero
 	}
 
