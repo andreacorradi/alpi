@@ -27,8 +27,11 @@ function Ui() {
 	}
 
 	self.zoomBox = function(magnification) {
+		//console.log('magnification: ', magnification)
 		container.style.width = 100 + (parseInt(magnification)) + '%'
+		console.log('containerW: ', container.style.width)
 		const containerW = container.clientWidth
+		console.log('containerW: ', containerW)
 	  const mainW = main.clientWidth
 	  const offsetW = (containerW - mainW) / 2
 	  main.scrollLeft = offsetW
@@ -43,7 +46,6 @@ function Ui() {
 		let selPar = e.target.options[e.target.selectedIndex].value
 		let selContent = e.target.options[e.target.selectedIndex].innerHTML
 		changeUiColor(APP.colors[selPar])
-		//setSelectSize(selContent)
 		if (field === 'filter') {
 			currentDataset = APP.data.prepareData({filterValue: selPar})
 			currentHighlight = APP.data.prepareHighlight({filterValue: selPar})
@@ -52,6 +54,7 @@ function Ui() {
 			currentHighlight = APP.data.prepareHighlight({orderValue: selPar})
 		}
 		APP.peakchart.updateTriangle(currentDataset)
+		setZoomScale()
 		APP.scrollyTelling.initScrollingSet(currentHighlight)
 	}
 
@@ -69,6 +72,21 @@ function Ui() {
 	function resizeSelect(width) {
 		dummyCountry.innerHTML = width
 		countrySel.style.width = (20 + dummyCountry.offsetWidth) + 'px'
+	}
+
+	function setZoomScale() { //sets slider zoom scale in order to have 20px span between displayed peaks
+		const span = main.offsetWidth / APP.peakchart.dataLength
+		const targetSpan = 20
+		const targetW = 20 * APP.peakchart.dataLength
+		if (targetW > main.offsetWidth) {
+			slider.style.opacity = 1
+			slider.style.pointerEvents = 'all'
+			const newMaxSlider = (targetW / main.offsetWidth) * 100 - 100
+			slider.setAttribute("max", newMaxSlider)
+		} else {
+			slider.style.opacity = 0.25
+			slider.style.pointerEvents = 'none'
+		}
 	}
 
 	return self

@@ -57,7 +57,7 @@ function Data() {
 			mountains = _mountains
 			countries = getUniqueValuesOfKeyNested(_mountains, 'country')
 			ranges = getUniqueValuesOfKey(_mountains, 'rangeac')
-			console.log('ranges Alpine Club classification: ', ranges)
+			//console.log('ranges Alpine Club classification: ', ranges)
 			countries.unshift('All')
 			populateSel(countrySel, countries, countryLabels)
 			populateSel(orderSel, orderPars, orderLabels)

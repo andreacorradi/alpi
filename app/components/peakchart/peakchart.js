@@ -27,7 +27,7 @@ function Peakchart() {
 	let containerH = container.clientHeight
 
 	let dataset = []
-	let dataLength = 0
+	self.dataLength = 0
 	let scaleY = {}
 	
 
@@ -38,8 +38,8 @@ function Peakchart() {
 			.domain([0, 4808])
 			.range([0, containerH - 40])
 		generateGradients()
-		dataLength = dataset.length
-		let span = svgW / dataLength
+		self.dataLength = dataset.length
+		let span = svgW / self.dataLength
 		let triangles = d3.select('svg').selectAll('polygon')
 	    .data(dataset)
 	  triangles
@@ -65,7 +65,7 @@ function Peakchart() {
 
 	self.zoomSvgTriangle = function(targetW) {
 		svg.clientWidth = targetW
-		const newSpan = targetW / dataLength
+		const newSpan = targetW / self.dataLength
 		d3.selectAll('polygon')
 			.attr('points', (d, i) => calcPoints(d, i, 0, newSpan))
 			.attr('points', (d, i) => calcPoints(d, i, 1, newSpan))
