@@ -36,23 +36,27 @@ function Peakchart() {
 		console.log(dataset)
 		scaleY = d3.scaleLinear()
 			.domain([0, 4808])
-			.range([10, containerH - 10])
+			.range([0, containerH - 40])
 		generateGradients()
 		dataLength = dataset.length
 		let span = svgW / dataLength
 		let triangles = d3.select('svg').selectAll('polygon')
 	    .data(dataset)
 	  triangles
-	  	.attr('class', (d) => assignColorClass(d))
+	  	// .attr('class', (d) => assignColorClass(d))
+	  	.attr('class', 'triangle')
+	  	.style('fill', (d) => assignColor(d))
     	.attr('points', (d, i) => calcPoints(d, i, 0, span))
 	  	.transition()
 	  	.duration(transDuration)
   		.attr('points', (d, i) => calcPoints(d, i, 1, span))
 	  let newTriangles = triangles
 		  .enter().append('polygon')
-		  	.attr('class', (d) => assignColorClass(d))
+		  	// .attr('class', (d) => assignColorClass(d))
+		  	.attr('class', 'triangle')
+		  	.style('fill', (d) => assignColor(d))
 		  	.attr('points', (d, i) => calcPoints(d, i, 0, span))
-		  	.on('click', (d) => console.log(d.mountain + ', ' + d.height))
+		  	.on('click', (d) => console.log(d.mountain + ', ' + d.height  + ', ' + d.firstascent))
 		  	.transition()
 	  		.duration(transDuration)
 		  	.attr('points', (d, i) => calcPoints(d, i, 1, span))
@@ -117,6 +121,15 @@ function Peakchart() {
 		}	else {
 			const gradientClass = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
 			return 'triangle ' + gradientClass
+		}
+	}
+
+	function assignColor(el) {
+		if (el.country.length === 1) {
+			return APP.colors[el.country]
+		}	else {
+			const gradientClass = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
+			return 'url(#' + gradientClass + '-gradient)'
 		}
 	}
 

@@ -53,5 +53,22 @@ const highlightData = [
 				caption: 'Ci sono * cime sopra i 4000 metri.'
 			}
 		]
+	},
+	{
+		mode: 'firstascent',
+		steps: [
+			{
+				mountain: [{name: 'Mont Chalancha', rank: 1446}],
+				caption: 'Questa è la montagna più a Ovest delle Alpi.'
+			},
+			{
+				mountain: [{name: 'Klosterwappen', rank: 1479}],
+				caption: 'Questa è la montagna più a Est delle Alpi.'
+			},
+			{
+				mountain: m => m.height > 4000,
+				caption: 'Ci sono * cime sopra i 4000 metri.'
+			}
+		]
 	}
 ]

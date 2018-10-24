@@ -86,6 +86,9 @@ function extractPeaks(file) {
 			        mountain['lat'] = parseDMS( DMScoord[0] ).lat
 			        mountain['lon'] = parseDMS( DMScoord[1] ).lon
 		        break
+		        case (5):
+			        mountain['rangeac'] = $(sel).text().slice(0, -1)
+			        break
 				    default:
 			        mountain[field] = $(sel).text().slice(0, -1)
 					}

@@ -6,13 +6,33 @@ function Data() {
 	orderValue = 'height'
 
 	const countrySel = document.getElementById("country-sel")
+	const dummyCountrySel = document.getElementById("dummy-country-sel")
 	const orderSel = document.getElementById("order-sel")
-	const orderPars = ['height', 'lat', 'drop']
+	const orderPars = ['height', 'lat', 'drop', 'firstascent']
 	let mountains = []
 	let dataset = []
 	let countries = []
+	let ranges = []
 	let filterField = 'country'
 	let selHighlight = highlightData
+
+	const countryLabels = {
+		"All": "All",
+		"FR": "French",
+		"IT": "Italian",
+		"CH": "Swiss",
+		"AT": "Austrian",
+		"DE": "German",
+		"LI": "Lichtensteiner",
+		"SI": "Slovenian"
+	}
+
+	const orderLabels = {
+		"height": "height",
+		"lat": "latitude",
+		"drop": "drop",
+		"firstascent": "first ascent"
+	}
 
 	self.init = function() {
 		d3.csv("./../scraper/output/mountains.csv", (m) => {
@@ -26,6 +46,7 @@ function Data() {
 				lat: +m.lat,
 				lon: +m.lon,
 				range: m.Range,
+				rangeac: m.rangeac,
 				region: m.Region,
 				country: generateCountryField(m.Country),
 				firstascent: +m.Firstascent
@@ -34,10 +55,12 @@ function Data() {
 		.then(function(_mountains) {
 			//if (error) throw error
 			mountains = _mountains
-			countries = getUniqueValuesOfKey(_mountains, 'country')
+			countries = getUniqueValuesOfKeyNested(_mountains, 'country')
+			ranges = getUniqueValuesOfKey(_mountains, 'rangeac')
+			console.log('ranges Alpine Club classification: ', ranges)
 			countries.unshift('All')
-			APP.ui.populateSel(countrySel, countries)
-			APP.ui.populateSel(orderSel, orderPars)
+			populateSel(countrySel, countries, countryLabels)
+			populateSel(orderSel, orderPars, orderLabels)
 			dataset = self.prepareData()
 			APP.peakchart.updateTriangle(dataset)
 			selHighlight = self.prepareHighlight()
@@ -108,12 +131,18 @@ function Data() {
 	function filterSortData(_data, filterField, filterValue, sortField) {
 		return _data
 			.filter((d) => {
-				if (filterValue === 'All') return d
-				else return d[filterField].includes(filterValue)
+				if (orderValue !== 'firstascent') {
+					if (filterValue === 'All') return d
+					else return d[filterField].includes(filterValue)
+				} else {
+					if (filterValue === 'All') return d.firstascent !== 0
+					else return d[filterField].includes(filterValue) && d.firstascent !== 0
+				}
 			})
 			.sort((a,b) => {
-				if (sortField === 'lat') return a[sortField] - b[sortField]
-				else return b[sortField] - a[sortField]
+				// if (sortField === 'lat') return a[sortField] - b[sortField]
+				// else return b[sortField] - a[sortField]
+				return a[sortField] - b[sortField]
 			})
 	}
 
@@ -132,21 +161,42 @@ function Data() {
 		})
 	}
 
-	function getUniqueValuesOfKey(array, key){ 
-		let countries = []
+	function getUniqueValuesOfKeyNested(array, key){ 
+		let tempArr = []
 	  array.forEach((el, i) => {
 	  	el[key].forEach((c) => {
-	  		if (!countries.includes(c)) {
-	  			countries.push(c)
+	  		if (!tempArr.includes(c)) {
+	  			tempArr.push(c)
 	  		}
 	  	})
 	  })
-	  return countries
+	  return tempArr
+	}
+
+	function getUniqueValuesOfKey(array, key){ 
+		let tempArr = []
+	  array.forEach((el, i) => {
+  		if (!tempArr.includes(el[key])) {
+  			tempArr.push(el[key])
+  		}
+	  })
+	  return tempArr
 	}
 
 	function generateCountryField(str) {
 		const arr = str.split('/')
 		return arr
+	}
+
+	function populateSel(select, arr, match) {
+		arr.forEach((c) => {
+			const option = document.createElement("option")
+			var attr = document.createAttribute("value")
+			attr.value = c
+			option.setAttributeNode(attr)
+			option.appendChild(document.createTextNode(match[c]))
+			select.appendChild(option)
+		})
 	}
 
 	return self

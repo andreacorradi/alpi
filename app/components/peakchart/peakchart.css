@@ -1,9 +1,8 @@
 #main-wrapper {
   width: 100%;
-  height: 80vh;
-  margin-top: 10vh;
+  height: 80%;
   padding: 0 1rem;
-  background: #eeeeee;
+  background: #fff;
   overflow-y: hidden;
 }
 #main-wrapper.main-mobile {
@@ -12,10 +11,10 @@
 main {
 	width: 100%;
 	height: 100%;
-  background: #eeeeee;
+  background: #fff;
   overflow-x: scroll;
   overflow-y: hidden;
-  transform: translateY(10px);
+  /*transform: translateY(10px);*/
 }
 main #peaks-chart {
   width: 100%;
@@ -23,14 +22,16 @@ main #peaks-chart {
 }
 #peaks-container {
   height: 100%;
-  display: flex;
+}
+.spacer-h-ten {
+	height: 10%;
 }
 
 .triangle {
 	fill-opacity: 0.3;
 	stroke: none;
 }
-.triangle.orange {
+/*.triangle.orange {
 	fill: orange;
 }
 .triangle.green {
@@ -80,4 +81,14 @@ main #peaks-chart {
 }
 .triangle.at-si {
 	fill: url(#at-si-gradient);
+}*/
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  #main-wrapper {
+  	height: 85%;
+  }
+  .spacer-h-ten {
+		height: 7.5%;
+	}
 }
