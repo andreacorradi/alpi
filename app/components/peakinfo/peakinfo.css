@@ -1,0 +1,60 @@
+#peakinfo {
+	color: #fff;
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#info-header {
+	width: 100%;
+	margin-top: 1rem;
+	height: 5rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.info-header {
+	width: 100%;
+	text-align: center;
+}
+#info-close {
+	width: 1.4rem;
+	height: 1.4rem;
+	stroke:white;
+}
+#info-header .info-title {
+	font-size: 1.4rem;
+}
+#info-header .info-country {
+	font-size: 1rem;
+}
+#info-header .info-range {
+	font-size: 1rem;
+}
+
+#info-map {
+
+}
+
+.info-detail {
+	margin-top: 2rem;
+}
+.detail-title {
+	margin-bottom: 0.5rem;
+}
+.info-geo {
+	display: flex;
+}
+.detail-chart {
+	height: 2rem;
+}
+.detail-dida {
+	margin-top: 0.5rem;
+	font-size: 0.7rem;
+}
+
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  
+}

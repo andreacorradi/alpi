@@ -11,16 +11,6 @@ function Peakchart() {
 	const stdOpacity = 0.3
 	const highOpacity = 0.8
 
-	const countryColors = { 
-		IT: 'purple',
-		CH: 'green',
-		FR: 'red',
-		DE: 'blue',
-		AT: 'orange',
-		LI: 'cyan',
-		SI: 'pink'
-	}
-
 	const countryCouples = ["FR/IT", "CH/IT",	"CH/FR", "AT/IT",	"AT/CH", "AT/DE",	"IT/SI", "CH/LI",	"AT/LI", "AT/SI"]
 
 	let svgW = svg.clientWidth
@@ -56,7 +46,10 @@ function Peakchart() {
 		  	.attr('class', 'triangle')
 		  	.style('fill', (d) => assignColor(d))
 		  	.attr('points', (d, i) => calcPoints(d, i, 0, span))
-		  	.on('click', (d) => console.log(d.mountain + ', ' + d.height  + ', ' + d.firstascent))
+		  	.on('click', (d) => {
+		  		APP.peakinfo.init(d)
+		  		APP.peakinfo.open()
+		  	})
 		  	.transition()
 	  		.duration(transDuration)
 		  	.attr('points', (d, i) => calcPoints(d, i, 1, span))
@@ -117,7 +110,7 @@ function Peakchart() {
 
 	function assignColorClass(el) {
 		if (el.country.length === 1) {
-			return 'triangle ' + countryColors[el.country]
+			return 'triangle ' + APP.colors[el.country]
 		}	else {
 			const gradientClass = el.country[0].toLowerCase() + '-' + el.country[1].toLowerCase()
 			return 'triangle ' + gradientClass
@@ -142,8 +135,8 @@ function Peakchart() {
       	.attr("x2", "100%").attr("y2", "0%")
 	    .selectAll("stop")
 	      .data([
-	        {offset: "0%", color: countryColors[c.split('/')[0]]},
-	        {offset: "100%", color: countryColors[c.split('/')[1]]}
+	        {offset: "0%", color: APP.colors[c.split('/')[0]]},
+	        {offset: "100%", color: APP.colors[c.split('/')[1]]}
 	      ])
 	    .enter().append("stop")
 	      .attr("offset", function(d) { return d.offset })

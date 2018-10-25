@@ -57,12 +57,14 @@ function Data() {
 			mountains = _mountains
 			countries = getUniqueValuesOfKeyNested(_mountains, 'country')
 			ranges = getUniqueValuesOfKey(_mountains, 'rangeac')
+			regions = getUniqueValuesOfKey(_mountains, 'region')
 			//console.log('ranges Alpine Club classification: ', ranges)
 			countries.unshift('All')
 			populateSel(countrySel, countries, countryLabels)
 			populateSel(orderSel, orderPars, orderLabels)
 			dataset = self.prepareData()
 			APP.peakchart.updateTriangle(dataset)
+			APP.ui.init()
 			selHighlight = self.prepareHighlight()
 			APP.scrollyTelling.initScrollingSet(selHighlight)
 		})
@@ -113,13 +115,17 @@ function Data() {
 				selHighlight.push({step: s.step, mountain: mountainsInCountry, caption: s.caption})
 			})
 		}
-
 		// removes the entries with no mountains and appends a step number
 		let selHighlightNotEmpty = selHighlight.filter((h) => h.mountain.length !== 0)
 		selHighlightNotEmpty.forEach((h, i) => {
 			h.step = (i+1).toString()
 		})
 		return selHighlightNotEmpty
+	}
+
+	self.returnPeakSubset = function(par, value) {
+		const returnPeaks = mountains.filter((m) => m[par] === value)
+		return returnPeaks
 	}
 
 	function objIncludes(arrOfObj, obj) {

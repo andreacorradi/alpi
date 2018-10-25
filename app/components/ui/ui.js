@@ -12,6 +12,7 @@ function Ui() {
 
 	self.init = function() {
 		initView()
+		setZoomScale()
 		slider.oninput = function(e) {
 		  output.innerHTML = e.target.value
 		  self.zoomBox(e.target.value)
@@ -29,9 +30,7 @@ function Ui() {
 	self.zoomBox = function(magnification) {
 		//console.log('magnification: ', magnification)
 		container.style.width = 100 + (parseInt(magnification)) + '%'
-		console.log('containerW: ', container.style.width)
 		const containerW = container.clientWidth
-		console.log('containerW: ', containerW)
 	  const mainW = main.clientWidth
 	  const offsetW = (containerW - mainW) / 2
 	  main.scrollLeft = offsetW
@@ -74,9 +73,9 @@ function Ui() {
 		countrySel.style.width = (20 + dummyCountry.offsetWidth) + 'px'
 	}
 
-	function setZoomScale() { //sets slider zoom scale in order to have 20px span between displayed peaks
-		const span = main.offsetWidth / APP.peakchart.dataLength
+	function setZoomScale() { //sets slider zoom scale in order to have targetSpan px span between displayed peaks when zoom is max
 		const targetSpan = 20
+		const span = main.offsetWidth / APP.peakchart.dataLength
 		const targetW = 20 * APP.peakchart.dataLength
 		if (targetW > main.offsetWidth) {
 			slider.style.opacity = 1
