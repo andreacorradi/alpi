@@ -1,6 +1,7 @@
 #peakinfo {
 	color: #fff;
 	padding: 1rem;
+	padding-top: 3rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -8,7 +9,7 @@
 #info-header {
 	width: 100%;
 	margin-top: 1rem;
-	height: 5rem;
+	height: 6rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
@@ -18,6 +19,13 @@
 	text-align: center;
 }
 #info-close {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 2rem;
+}
+#icon-close {
 	width: 1.4rem;
 	height: 1.4rem;
 	stroke:white;
@@ -33,11 +41,42 @@
 }
 
 #info-map {
+	margin-top: 1rem;
+	width: 100%;
+	height: 14rem;
+	/*border: 1px solid white;*/
+}
+#zoom-map-button {
+	margin-top: 1.4rem;
+	width: 100%;
+	height: 2rem;
+	display: flex;
+	justify-content: center;
+}
+#zoom-map {
+	background: white;
+	padding: 0.5rem;
+	width: auto;
+	height: 2rem;
+	line-height: 1rem;
+	font-size: 1rem;
+	border-radius: 0.5rem;
+}
+circle {
+	fill: white;
+	fill-opacity: 0.5;
+}
+circle.selected {
+	fill: white;
+	fill-opacity: 1;
+}
 
+#info-detail {
+	width: 100%;
 }
 
 .info-detail {
-	margin-top: 2rem;
+	margin-top: 3rem;
 }
 .detail-title {
 	margin-bottom: 0.5rem;

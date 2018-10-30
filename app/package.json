@@ -14,6 +14,7 @@
     "jquery": "^3.3.1",
     "lodash": "^4.17.11",
     "scrollama": "^1.4.4",
-    "static-player": "0.0.13"
+    "static-player": "0.0.13",
+    "topojson": "^3.0.2"
   }
 }
