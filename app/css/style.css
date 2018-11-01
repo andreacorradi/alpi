@@ -41,10 +41,10 @@ html, body {
 }
 .layer#peakinfo-ui {
   position: fixed;
-  top: 1rem;
+  padding-top: .5rem;
   left: 0;
   width: 100%;
-  height: 2rem;
+  height: 3rem;
   display: none;
 }
 

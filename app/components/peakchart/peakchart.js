@@ -47,13 +47,29 @@ function Peakchart() {
 		  	.style('fill', (d) => assignColor(d))
 		  	.attr('points', (d, i) => calcPoints(d, i, 0, span))
 		  	.on('click', (d) => {
-		  		APP.peakinfo.init(d)
-		  		APP.peakinfo.open()
+					getPeakData(d)
 		  	})
 		  	.transition()
 	  		.duration(transDuration)
 		  	.attr('points', (d, i) => calcPoints(d, i, 1, span))
 		triangles.exit().remove()
+	}
+
+	async function getPeakData(peak) {
+	  const uri = 'http://en.wikipedia.org/' + peak.mountainLink
+	  let promise = new Promise((resolve, reject) => {
+	    setTimeout(() => resolve("done!"), 1000)
+	  })
+	 //  let promise = fetch(uri).then((response) => {
+		//   response.text().then((text) => {
+		//     console.log(text)
+		//     return text
+		//   })
+		// })
+
+	  let result = await promise
+	  APP.peakinfo.init(peak, result)
+	  APP.peakinfo.open()
 	}
 
 	self.zoomSvgTriangle = function(targetW) {

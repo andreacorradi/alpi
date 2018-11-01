@@ -29,7 +29,8 @@ function Peakinfo() {
 		"SI": "Slovenia"
 	}
 
-	self.init = function(peak) {
+	self.init = function(peak, info) {
+		console.log(info)
 		peakinfo.style.display = 'block'
 		selectedPeak = peak
 		assignColor(selectedPeak)
@@ -40,6 +41,7 @@ function Peakinfo() {
 		regionPeaks = APP.data.returnPeakSubset('region', peak.region)
 		console.log('regionPeaks: ', regionPeaks)
 
+		document.getElementById("zoom-map-button").querySelector('.button#zoom-map').innerHTML = 'ZOOM on ' + peak.region
 		generateMap(peak)
 		propertyArr.forEach((par) => generateChart(regionPeaks, peak, par))
 
@@ -69,6 +71,18 @@ function Peakinfo() {
 		else peakinfo.querySelector('.info-country').innerHTML = 'Country: ' + countryLabels[peak.country[0]]
 		peakinfo.querySelector('.info-region').innerHTML = 'Region: ' + peak.region
 		//peakinfo.querySelector('.info-range').innerHTML = 'Range: ' + peak.rangeac
+	}
+
+	function assignColor(el) {
+		if (el.country.length === 1) {
+			peakinfo.style.background = APP.colors[el.country]
+			zoombutton.style.color = APP.colors[el.country]
+			peakinfoUi.style.background = APP.colors[el.country]
+		}	else {
+			peakinfo.style.backgroundImage = 'linear-gradient(' + APP.colors[el.country[0]] + ',' + APP.colors[el.country[1]] + ')'
+			zoombutton.style.color = APP.colors[el.country[0]]
+			peakinfoUi.style.background = APP.colors[el.country[0]]
+		}
 	}
 
 	function generateChart(data, peak, par) {
@@ -122,16 +136,6 @@ function Peakinfo() {
 				.style('fill-opacity', (r) => {
 					if (r.rank === peak.rank) { return 1 } else return 0.2
 				})
-	}
-
-	function assignColor(el) {
-		if (el.country.length === 1) {
-			peakinfo.style.background = APP.colors[el.country]
-			zoombutton.style.color = APP.colors[el.country]
-		}	else {
-			peakinfo.style.backgroundImage = 'linear-gradient(' + APP.colors[el.country[0]] + ',' + APP.colors[el.country[1]] + ')'
-			zoombutton.style.color = APP.colors[el.country[0]]
-		}
 	}
 
 	function generateMap(peak) {
@@ -204,7 +208,7 @@ function Peakinfo() {
 						.style('r', circleSize / zScale)
 		  	} else {
 		  		e.target.classList.remove('zoomed')
-		  		e.target.innerHTML = 'ZOOM in'
+		  		e.target.innerHTML = 'ZOOM on ' + peak.region
 		  		svgMap.selectAll('g')
 						.transition()
 						.duration(750)
