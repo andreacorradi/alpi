@@ -1,0 +1,14 @@
+{
+    "name": "alpi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "",
+    "scripts": {
+      "dev": "browser-sync start --server \"app\" --files \"*/**.html, */**.css, */**.js\""
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      
+    }
+  }

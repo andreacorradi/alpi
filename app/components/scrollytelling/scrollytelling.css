@@ -5,16 +5,27 @@
 	position: relative;
 	overflow-y: scroll;
 }
+.tour-caption-wrapper {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100vh;
+}
+.tour-caption-wrapper:first-child {
+	margin-top: 100vh;
+}
+.tour-caption-wrapper:last-child {
+	margin-bottom: 20vh;
+}
+
 .tour-caption {
 	display: block;
 	width: 70%;
 	margin: 0 auto;
 	height: 6rem;
-	margin-top: 100vh;
+	margin-top: 40vh;
+	margin-bottom: 40vh;
 	padding: 1rem;
 	background: lightgrey;
 	opacity: 0.5;
-}
-.tour-caption:last-child {
-	margin-bottom: 100vh;
 }

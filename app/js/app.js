@@ -2,6 +2,8 @@
 
 	window.APP = {}
 
+	APP.timeline =  ['explore', 'tour']
+
 	APP.colors = {
 		"All": "#333333",
 		"FR": "#F0015B", //rododendro
@@ -13,13 +15,25 @@
 		"SI": "pink"
 	}
 
+	APP.state = 'explore'
+
+	APP.switchState = function() {
+		APP.stator.go(this.name)
+	}
+
 	APP.init = function() {
+		APP.stator = new window.States()
+		APP.stator.start({ html5: false })
+
 		APP.data = new Data()
 		APP.peakchart = new Peakchart()
 		APP.peakinfo = new Peakinfo()
 		APP.scrollyTelling = new ScrollyTelling()
 		APP.ui = new Ui()
+		
 		APP.data.init()
+
+		APP.stator.go(APP.state)
 	}
 
 	$(document).ready(function() {

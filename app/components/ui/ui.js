@@ -47,14 +47,20 @@ function Ui() {
 		changeUiColor(APP.colors[selPar])
 		if (field === 'filter') {
 			currentDataset = APP.data.prepareData({filterValue: selPar})
-			currentHighlight = APP.data.prepareHighlight({filterValue: selPar})
+			if (APP.state === 'tour') {
+				currentHighlight = APP.data.prepareHighlight({filterValue: selPar})
+			}
 		} else {
 			currentDataset = APP.data.prepareData({orderValue: selPar})
-			currentHighlight = APP.data.prepareHighlight({orderValue: selPar})
+			if (APP.state === 'tour') {
+				currentHighlight = APP.data.prepareHighlight({orderValue: selPar})
+			}
 		}
 		APP.peakchart.updateTriangle(currentDataset)
 		setZoomScale()
-		APP.scrollyTelling.initScrollingSet(currentHighlight)
+		if (APP.state === 'tour') {
+			APP.scrollyTelling.initScrollingSet(currentHighlight)
+		}
 	}
 
 	function initView() {

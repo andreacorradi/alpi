@@ -46,7 +46,7 @@ function Peakinfo() {
 		propertyArr.forEach((par) => generateChart(regionPeaks, peak, par))
 
 		peakinfoUi.querySelector('#icon-close').onclick = function(e) {
-			close()
+			self.close()
 		}
 	}
 
@@ -56,7 +56,7 @@ function Peakinfo() {
 		peakinfo.style.transform = 'translateY(0%)'
 	}
 
-	function close() {
+	self.close = function() {
 		peakinfo.style.transform = 'translateY(100%)'
 		peakinfo.style.display = 'none'
 		peakinfoUi.style.display = 'none'

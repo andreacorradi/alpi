@@ -114,12 +114,12 @@ function Peakchart() {
 		const base = span/2
 		const altezza = d.drop
 		const x_add = (base * (d.height - altezza))/altezza
-		if (i !== 0) {
-			const altezza_b = d.previous.drop - (d.previous.height - d.height)
-			if (altezza_b > angleThreshold) {
-				x_sub = (base * (d.previous.height - d.previous.drop))/altezza_b
-			} else x_sub = 0
-		}
+		// if (i !== 0) {
+		// 	const altezza_b = d.previous.drop - (d.previous.height - d.height)
+		// 	if (altezza_b > angleThreshold) {
+		// 		x_sub = (base * (d.previous.height - d.previous.drop))/altezza_b
+		// 	} else x_sub = 0
+		// }
 		const points = (i*span - span/2 - x_sub) + ',' + containerH + ' ' + i*span + ',' + (containerH - H) + ' ' + (i*span + span/2 + x_add) + ',' + containerH
 		return points
 	}

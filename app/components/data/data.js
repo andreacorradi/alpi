@@ -3,12 +3,12 @@ function Data() {
 	var self = this
 
 	filterValue = 'All'
-	orderValue = 'height'
+	orderValue = 'lat'
 
 	const countrySel = document.getElementById("country-sel")
 	const dummyCountrySel = document.getElementById("dummy-country-sel")
 	const orderSel = document.getElementById("order-sel")
-	const orderPars = ['height', 'lat', 'drop', 'firstascent']
+	const orderPars = ['lat', 'height', 'drop', 'firstascent']
 	let mountains = []
 	let dataset = []
 	let countries = []
@@ -35,7 +35,7 @@ function Data() {
 	}
 
 	self.init = function() {
-		d3.csv("./../scraper/output/mountains.csv", (m) => {
+		d3.csv("./components/data/assets/mountains.csv", (m) => {
 			return {
 				rank: +m.Rank,
 				mountain: m.Mountain,
@@ -65,8 +65,6 @@ function Data() {
 			dataset = self.prepareData()
 			APP.peakchart.updateTriangle(dataset)
 			APP.ui.init()
-			selHighlight = self.prepareHighlight()
-			APP.scrollyTelling.initScrollingSet(selHighlight)
 		})
 	}
 
