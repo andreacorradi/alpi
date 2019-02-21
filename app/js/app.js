@@ -16,6 +16,8 @@
 	}
 
 	APP.state = 'explore'
+	APP.peaksInWindow = 1000 //visible peaks, initialised to 1000 as random value
+
 
 	APP.switchState = function() {
 		APP.stator.go(this.name)
@@ -32,13 +34,13 @@
 		APP.ui = new Ui()
 		
 		APP.data.init()
-
 		APP.stator.go(APP.state)
 	}
 
 	$(document).ready(function() {
 		console.log('ready')
 		APP.init()
+		document.getElementById("peakinfo").style.display = 'none'
 	})
 
 })(window)

@@ -1,7 +1,7 @@
 #scroll-container {
 	position: relative;
 	width: 100%;
-	height: auto;
+	height: 100%;
 	position: relative;
 	overflow-y: scroll;
 }

@@ -3,7 +3,6 @@ function Peakinfo() {
 	let self = this
 
 	const peakinfo = document.getElementById("peakinfo")
-	const peakinfoUi = document.getElementById("peakinfo-ui")
 	const zoombutton = document.getElementById("zoom-map")
 	const containerW = document.getElementById('info-map').offsetWidth
 	const containerH = document.getElementById('info-map').offsetHeight
@@ -30,7 +29,7 @@ function Peakinfo() {
 	}
 
 	self.init = function(peak, info) {
-		console.log(info)
+		// console.log(info)
 		peakinfo.style.display = 'block'
 		selectedPeak = peak
 		assignColor(selectedPeak)
@@ -45,21 +44,23 @@ function Peakinfo() {
 		generateMap(peak)
 		propertyArr.forEach((par) => generateChart(regionPeaks, peak, par))
 
-		peakinfoUi.querySelector('#icon-close').onclick = function(e) {
+		peakinfo.querySelector('#icon-close').onclick = function(e) {
 			self.close()
 		}
 	}
 
 	self.open = function() {
-		peakinfoUi.style.display = 'block'
 		document.getElementById("scrollytelling").style.display = 'none'
-		peakinfo.style.transform = 'translateY(0%)'
+		peakinfo.style.display = 'block'
+		peakinfo.classList.add('open')
 	}
 
 	self.close = function() {
-		peakinfo.style.transform = 'translateY(100%)'
-		peakinfo.style.display = 'none'
-		peakinfoUi.style.display = 'none'
+		peakinfo.classList.remove('open')
+		$(peakinfo).on('transitionend webkitTransitionEnd', function(e) {
+			if (!e.target.classList.contains('open')) e.target.style.display = 'none'
+		})
+		// peakinfo.style.display = 'none'
 		document.getElementById("scrollytelling").style.display = 'block'
 		d3.selectAll('.info-detail .detail-chart svg.svg-chart').remove()
 		d3.selectAll('#info-map svg.svg-map').remove()
@@ -77,11 +78,11 @@ function Peakinfo() {
 		if (el.country.length === 1) {
 			peakinfo.style.background = APP.colors[el.country]
 			zoombutton.style.color = APP.colors[el.country]
-			peakinfoUi.style.background = APP.colors[el.country]
+			peakinfo.style.background = APP.colors[el.country]
 		}	else {
 			peakinfo.style.backgroundImage = 'linear-gradient(' + APP.colors[el.country[0]] + ',' + APP.colors[el.country[1]] + ')'
 			zoombutton.style.color = APP.colors[el.country[0]]
-			peakinfoUi.style.background = APP.colors[el.country[0]]
+			peakinfo.style.background = APP.colors[el.country[0]]
 		}
 	}
 

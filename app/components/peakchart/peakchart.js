@@ -9,6 +9,7 @@ function Peakchart() {
 	const transDuration = 1000
 	const lowOpacity = 0.02
 	const stdOpacity = 0.3
+	const intOpacity = 0.5
 	const highOpacity = 0.8
 
 	const countryCouples = ["FR/IT", "CH/IT",	"CH/FR", "AT/IT",	"AT/CH", "AT/DE",	"IT/SI", "CH/LI",	"AT/LI", "AT/SI"]
@@ -75,6 +76,7 @@ function Peakchart() {
 	self.zoomSvgTriangle = function(targetW) {
 		svg.clientWidth = targetW
 		const newSpan = targetW / self.dataLength
+		APP.peaksInWindow = Math.floor(document.querySelector(".layer#chart #main-container").clientWidth / newSpan)
 		d3.selectAll('polygon')
 			.attr('points', (d, i) => calcPoints(d, i, 0, newSpan))
 			.attr('points', (d, i) => calcPoints(d, i, 1, newSpan))
@@ -89,6 +91,11 @@ function Peakchart() {
 			})
 	}
 
+	self.setIntLightTriangle = function() {
+		d3.selectAll('polygon')
+			.style('fill-opacity', intOpacity)
+	}
+
 	self.resetlightTriangle = function() {
 		d3.selectAll('polygon')
 			.style('fill-opacity', stdOpacity)
@@ -99,7 +106,6 @@ function Peakchart() {
 		if (!_.isArray(subset)) mountainArr = dataset.filter(subset)
 		return mountainArr.length
 	}
-
 
 	function objIncludes(arrOfObj, obj) {
 		let res = arrOfObj.filter((e) => _.isEqual(e, obj))
@@ -114,12 +120,12 @@ function Peakchart() {
 		const base = span/2
 		const altezza = d.drop
 		const x_add = (base * (d.height - altezza))/altezza
-		// if (i !== 0) {
-		// 	const altezza_b = d.previous.drop - (d.previous.height - d.height)
-		// 	if (altezza_b > angleThreshold) {
-		// 		x_sub = (base * (d.previous.height - d.previous.drop))/altezza_b
-		// 	} else x_sub = 0
-		// }
+		if (i !== 0) {
+			const altezza_b = d.previous.drop - (d.previous.height - d.height)
+			if (altezza_b > angleThreshold) {
+				x_sub = (base * (d.previous.height - d.previous.drop))/altezza_b
+			} else x_sub = 0
+		}
 		const points = (i*span - span/2 - x_sub) + ',' + containerH + ' ' + i*span + ',' + (containerH - H) + ' ' + (i*span + span/2 + x_add) + ',' + containerH
 		return points
 	}

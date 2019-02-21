@@ -11,9 +11,9 @@ window.ExploreState = function () {
 		APP.peakinfo.close()
 		document.querySelector("#control .slidecontainer input").style.pointerEvents = "all"
 		document.querySelector("#control .slidecontainer").style.opacity = 1
-		document.querySelector("svg#peaks-chart").style.pointerEvents = "all"
+		document.querySelector("svg#peaks-chart").style.pointerEvents = "none"
 		document.querySelector("button#switch-mode").innerHTML = "tour"
-		modeButton.innerHTML = "start " + stateName.name
+		modeButton.innerHTML = "start " + stateName.name 
 	}
 
   self.enter = function (option) {

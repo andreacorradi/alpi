@@ -1,14 +1,12 @@
 #peakinfo {
 	color: #fff;
 	padding: 1rem;
-	padding-top: 3rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 #info-header {
 	width: 100%;
-	margin-top: 1rem;
 	height: 6rem;
 	display: flex;
 	flex-direction: column;

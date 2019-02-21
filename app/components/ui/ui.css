@@ -115,18 +115,22 @@ footer {
 }
 
 #control {
+  position: relative;
   width: 100%;
   height: 100%;
 }
 .slidecontainer {
   width: 100%;
+  position: relative;
 }
 .slidecontainer p {
   display: none;
 }
 /* The slider itself */
 .slider {
-  margin-top: 10px;
+  position: absolute;
+  top: 10px;
+  left: 0;
   padding-left: 0.3rem;
   padding-right: 0.3rem;
   -webkit-appearance: none;  /* Override default CSS styles */
@@ -134,11 +138,35 @@ footer {
   width: 100%;
   height: 2rem;
   border-radius: 1rem;
-  background: #333;
+  background: transparent;
   outline: none;
   opacity: 1;
   -webkit-transition: .2s;
   transition: opacity .2s;
+  z-index: 9999;
+}
+#slider-progress {
+  position: absolute;
+  top: 10px;
+  /* left: 50%; */
+  /* transform: translateX(-50%); */
+  width: 100%;
+  height: 2rem;
+  background: #333;
+  border-radius: 1rem;
+  outline: none;
+  opacity: 1;
+}
+#slider-bkgd {
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  width: 100%;
+  height: 2rem;
+  border-radius: 1rem;
+  background: #333;
+  outline: none;
+  opacity: .9;
 }
 
 /* Mouse-over effects */
@@ -153,9 +181,48 @@ footer {
   height: 1.4rem;
   /*margin-left: 0.3rem;*/
   border-radius: 1rem;
-  background: #fff;
+  background: white;
   cursor: pointer;
 }
+
+/* Arrows */
+#arrow {
+  position: absolute;
+  top: 0.8rem;
+  left: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+#tail {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.2rem;
+  width: 1.4rem;
+  height: 0px;
+  border: 1px solid white;
+  animation: tailScale 6s infinite;
+}
+@keyframes tailScale {
+  0% {width: 0rem;}
+  10%, 100% {width: 1.4rem;}
+}
+#head {
+  position: absolute;
+  top: 0.55rem;
+  left: 1rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+  transform: rotate(45deg);
+  transform-origin: center center;
+  animation: headScale 6s infinite;
+}
+@keyframes headScale {
+  0%, 5% {width: 0rem; height: 0rem;}
+  5%, 100% {width: 0.6rem; height: 0.6rem;}
+}
+
 
 @media only screen and (min-width: 768px) {
   /* For desktop: */

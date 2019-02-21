@@ -9,22 +9,52 @@ function Ui() {
 	const countrySel = document.getElementById("country-sel")
 	const dummyCountry = document.getElementById("dummy-country")
 	const orderSel = document.getElementById("order-sel")
+	const svg = document.querySelector("svg#peaks-chart")
+	const arrow = document.querySelector(".layer#ui #arrow")
+	const progress = document.querySelector(".layer#ui #slider-progress")
+
+	let interactionTh = 50
 
 	self.init = function() {
 		initView()
 		setZoomScale()
+		//sliderAnimation()
 		slider.oninput = function(e) {
-		  output.innerHTML = e.target.value
-		  self.zoomBox(e.target.value)
-		  APP.peakchart.zoomSvgTriangle(container.clientWidth)
+			output.innerHTML = e.target.value
+			// checkThreshold() and enable/disable peak selection
+			if (APP.peaksInWindow < interactionTh) {
+				svg.style.pointerEvents = "all"
+				APP.peakchart.setIntLightTriangle()
+			} else {
+				svg.style.pointerEvents = "none"
+				APP.peakchart.resetlightTriangle()
+			}
+			e.target.value > 1 ? arrow.style.display = "none" : arrow.style.display = "block"
+			self.zoomBox(e.target.value)
+			APP.peakchart.zoomSvgTriangle(container.clientWidth)
 		}
 		countrySel.onchange = function(e) {
 			resizeSelect(e.target.options[e.target.selectedIndex].innerHTML)
+			document.querySelector("button#switch-mode").style.background = APP.colors[e.target.options[e.target.selectedIndex].value]
 			updateView(e, 'filter')
 		}
 		orderSel.onchange = function(e) {
 			updateView(e, 'order')
 		}
+		main.onscroll = function(e) {
+			sliderIndicatorPosition()
+		}
+	}
+
+	function sliderIndicatorSize(ratio) {
+		const newWidth = Math.floor(ratio*100)
+		newWidth < 80 ? progress.style.borderRadius = 0 : progress.style.borderRadius = '1rem'
+		progress.style.width = newWidth + '%'
+	}
+
+	function sliderIndicatorPosition() {
+		const offsetScroll = Math.floor((main.scrollLeft / container.clientWidth)*100)
+		progress.style.left = offsetScroll + '%'
 	}
 
 	self.zoomBox = function(magnification) {
@@ -33,9 +63,10 @@ function Ui() {
 		const containerW = container.clientWidth
 	  const mainW = main.clientWidth
 	  const offsetW = (containerW - mainW) / 2
-	  main.scrollLeft = offsetW
+		main.scrollLeft = offsetW
 	  slider.value = magnification
-	  output.innerHTML = slider.value
+		output.innerHTML = slider.value
+		sliderIndicatorSize(mainW/containerW)
 	}
 
 	function updateView(e, field) {
@@ -67,6 +98,8 @@ function Ui() {
 		window.scrollTo(pageXOffset, 0)
 		APP.peakchart.resetlightTriangle()
 		self.zoomBox('0') //when data are filtered or sorted the zoom comes back to zero
+		arrow.style.display = "block"
+		document.querySelector("svg#peaks-chart").style.pointerEvents = "none"
 	}
 
 	function changeUiColor(color) {
