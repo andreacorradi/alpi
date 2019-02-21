@@ -104,7 +104,9 @@ function Ui() {
 
 	function changeUiColor(color) {
 		document.getElementsByTagName("header")[0].style.background = color
-		document.getElementsByClassName("slider")[0].style.background = color
+		// document.getElementsByClassName("slider")[0].style.background = color
+		document.getElementById("slider-bkgd").style.background = color
+		progress.style.background = color
 	}
 
 	function resizeSelect(width) {
